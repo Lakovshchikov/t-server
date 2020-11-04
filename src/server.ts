@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'module-alias/register';
 import http from 'http';
 import express from 'express';
 import { createConnection } from 'typeorm';
@@ -19,15 +20,14 @@ process.on('unhandledRejection', (e) => {
 
 const router = express();
 applyMiddleware(middleware, router);
-applyMiddleware(errorHandlers, router);
 applyRoutes(routes, router);
+applyMiddleware(errorHandlers, router);
 
 const { PORT = 3000 } = process.env;
 const server = http.createServer(router);
 
 (async function startServer() {
     createConnection(typeOrmConfig).then((connection) => {
-        console.log(connection);
         server.listen(PORT, () => console.log(`Server is running http://localhost:${PORT}...`));
     }).catch((e) => {
         console.log(e);

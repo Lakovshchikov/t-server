@@ -57,6 +57,7 @@
                 "props": false
             }
         ],
+        "eol-last": "off",
         "no-plusplus": "off",
         "no-restricted-syntax": "off",
         "indent": [
