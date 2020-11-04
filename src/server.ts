@@ -9,12 +9,12 @@ import routes from './services';
 import { typeOrmConfig } from './ormconfig';
 
 process.on('uncaughtException', (e) => {
-  console.log(e);
-  process.exit(1);
+    console.log(e);
+    process.exit(1);
 });
 process.on('unhandledRejection', (e) => {
-  console.log(e);
-  process.exit(1);
+    console.log(e);
+    process.exit(1);
 });
 
 const router = express();
@@ -26,10 +26,10 @@ const { PORT = 3000 } = process.env;
 const server = http.createServer(router);
 
 (async function startServer() {
-  createConnection(typeOrmConfig).then((connection) => {
-    console.log(connection);
-    server.listen(PORT, () => console.log(`Server is running http://localhost:${PORT}...`));
-  }).catch((e) => {
-    console.log(e);
-  });
+    createConnection(typeOrmConfig).then((connection) => {
+        console.log(connection);
+        server.listen(PORT, () => console.log(`Server is running http://localhost:${PORT}...`));
+    }).catch((e) => {
+        console.log(e);
+    });
 }());

@@ -61,11 +61,12 @@
         "no-restricted-syntax": "off",
         "indent": [
             "error",
-            2,
+            4,
             {
                 "SwitchCase": 1
             }
         ],
+        "@typescript-eslint/indent": ["off"],
         "func-names": "off",
         "object-shorthand": "off",
         "comma-dangle": [

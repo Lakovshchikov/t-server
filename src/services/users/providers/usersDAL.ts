@@ -1,4 +1,4 @@
 export const getExampleUser = () => ({
-  id: 1,
-  name: 'Ivan'
+    id: 1,
+    name: 'Ivan'
 });
