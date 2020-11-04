@@ -1,4 +1,7 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import {
+    Entity, PrimaryColumn, Column, OneToMany, JoinColumn
+} from 'typeorm';
+import { Ticket } from '@services/ticket/ticket';
 
 @Entity({ name: 'user' })
 export class User {
@@ -28,4 +31,8 @@ export class User {
 
     @Column({ type: 'jsonb' })
     config_permission: {};
+
+    @OneToMany(() => Ticket, ticket => ticket.user)
+    @JoinColumn({ name: 'id' })
+    tickets: Ticket[];
 }

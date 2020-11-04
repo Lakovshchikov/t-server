@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
+import usersController from './usersController';
 
 export default [
     {
-        path: '/',
+        path: '/user',
         method: 'get',
         handler: async (req: Request, res: Response) => {
-            res.send('Hello world!');
+            const user = await usersController.getUserByEmail(req.query.email.toString());
         }
     }
 ];
