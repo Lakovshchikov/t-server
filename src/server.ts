@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import 'module-alias/register';
-import http from 'http';
+import fs from 'fs';
+import * as util from 'util';
+import https from 'https';
 import express from 'express';
 import { createConnection } from 'typeorm';
 import { applyMiddleware, applyRoutes } from './utils';
@@ -24,10 +26,15 @@ applyRoutes(routes, router);
 applyMiddleware(errorHandlers, router);
 
 const { PORT = 3000 } = process.env;
-const server = http.createServer(router);
+const readFile = util.promisify(fs.readFile);
 
 (async function startServer() {
-    createConnection(typeOrmConfig).then((connection) => {
+    createConnection(typeOrmConfig).then(async (connection) => {
+        const [ key, cert ] = await Promise.all([
+            readFile('cert/key.pem'),
+            readFile('cert/cert.pem')
+        ]);
+        const server = await https.createServer({ key, cert }, router);
         server.listen(PORT, () => console.log(`Server is running http://localhost:${PORT}...`));
     }).catch((e) => {
         console.log(e);
