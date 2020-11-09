@@ -110,3 +110,5 @@ package-lock.json
 src/temp/
 
 src/cert/
+
+src/static/

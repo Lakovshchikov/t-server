@@ -1,7 +1,16 @@
 import {
     handleCors,
     handleBodyRequestParsing,
-    handleCompression
+    handleCompression,
+    handleSession,
+    initConfig
 } from './common';
 
-export default [ handleCors, handleBodyRequestParsing, handleCompression ];
+import { handleAuth } from './passport';
+
+export async function initMiddleware() {
+    const promise = initConfig();
+    return promise;
+}
+
+export default [ handleCors, handleBodyRequestParsing, handleSession, handleCompression, handleAuth ];
