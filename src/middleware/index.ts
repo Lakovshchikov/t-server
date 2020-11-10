@@ -6,7 +6,7 @@ import {
     initConfig
 } from './common';
 
-import { handleAuth } from './passport';
+import { handleAuth } from './auth';
 
 export async function initMiddleware() {
     const promise = initConfig();

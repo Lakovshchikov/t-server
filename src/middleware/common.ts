@@ -4,12 +4,12 @@ import parser from 'body-parser';
 import session, { SessionOptions } from 'express-session';
 import compression from 'compression';
 import dotenv from 'dotenv';
-import { PGStoreOptions } from 'connect-pg-simple';
+import connectPgSimple, { PGStoreOptions } from 'connect-pg-simple';
 import { getConnection } from 'typeorm';
 import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver';
 import { Pool } from 'pg';
 
-const PGStore = require('connect-pg-simple')(session);
+const PGStore = connectPgSimple(session);
 
 dotenv.config();
 

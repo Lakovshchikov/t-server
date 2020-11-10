@@ -12,7 +12,7 @@ export const handleAuth = (router: Router) => {
 passport.use(new Strategy(
     async (username: string, pass: string, done) => {
         const user = await usersController.getUserByEmail(username);
-        if (!user || pass !== user.pass) {
+        if (!user || !user.validPass(pass)) {
             return done(null, false);
         } else {
             return done(null, user);

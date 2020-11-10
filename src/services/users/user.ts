@@ -3,6 +3,11 @@ import {
 } from 'typeorm';
 import { Ticket } from '@services/ticket/ticket';
 
+import crypto, { scrypt } from 'crypto';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 @Entity({ name: 'user' })
 export class User {
     @PrimaryColumn({ type: 'character varying', length: 100 })
@@ -35,4 +40,11 @@ export class User {
     @OneToMany(() => Ticket, ticket => ticket.user)
     @JoinColumn({ name: 'id' })
     tickets: Ticket[];
+
+    validPass = function (pass: string):boolean {
+        let hash = crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
+            1000, 64, 'sha512').toString('hex');
+        debugger;
+        return hash === this.pass;
+    };
 }
