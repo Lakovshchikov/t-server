@@ -8,8 +8,8 @@ export class Ticket {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    // @Column({ type: 'varying character', length: 100 })
-    // email: string;
+    @Column({ type: 'varying character', length: 100 })
+    email: string;
 
     @Column({ type: 'money' })
     cost: string;

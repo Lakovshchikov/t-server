@@ -11,7 +11,7 @@ dotenv.config();
 @Entity({ name: 'user' })
 export class User {
     @PrimaryColumn({ type: 'character varying', length: 100 })
-    email:string;
+    email: string;
 
     @Column({ type: 'text' })
     name: string;
@@ -41,10 +41,14 @@ export class User {
     @JoinColumn({ name: 'id' })
     tickets: Ticket[];
 
-    validPass = function (pass: string):boolean {
+    validPass = function (pass: string): boolean {
         let hash = crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
             1000, 64, 'sha512').toString('hex');
         debugger;
         return hash === this.pass;
     };
+
+    // validUser = function (data): boolean {
+    //
+    // };
 }
