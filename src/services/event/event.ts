@@ -21,8 +21,8 @@ export class Event {
     @Column({ type: 'smallint' })
     age_restr: number;
 
-    @Column({ type: 'text' })
-    add_restr: string;
+    @Column({ type: 'text', nullable: true })
+    add_restr: string | null;
 
     @Column({ type: 'smallint' })
     category: string;

@@ -1,5 +1,5 @@
-import { DbProvider } from '@services/users/providers/dbProvider';
-import { User } from '@services/users/user';
+import { DbProvider } from '@services/user/providers/dbProvider';
+import { User } from '@services/user/user';
 
 class UserController {
     getUserByEmail = async (email: string): Promise<User> => {

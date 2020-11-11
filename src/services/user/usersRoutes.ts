@@ -9,7 +9,7 @@ export default [
         method: 'post',
         handler: [
             passport.authenticate('local', { failureRedirect: '/login' }),
-            async (req: Request, res: Response) => {
+            (req: Request, res: Response) => {
                 res.redirect('/');
             }
         ]
@@ -17,7 +17,7 @@ export default [
     {
         path: '/login',
         method: 'get',
-        handler: async (req: Request, res: Response) => {
+        handler: (req: Request, res: Response) => {
             if (req.user !== undefined) {
                 res.redirect('/');
             } else {
@@ -26,9 +26,16 @@ export default [
         }
     },
     {
+        path: '/reg',
+        method: 'post',
+        handler: (req: Request, res: Response) => {
+
+        }
+    },
+    {
         path: '/logout',
         method: 'get',
-        handler: async (req: Request, res: Response) => {
+        handler: (req: Request, res: Response) => {
             req.logOut();
             res.clearCookie('ticket_o.sid');
             res.redirect('/login');
@@ -37,7 +44,7 @@ export default [
     {
         path: '/user',
         method: 'post',
-        handler: async (req: Request, res: Response) => {
+        handler: (req: Request, res: Response) => {
         }
     },
     {
@@ -55,14 +62,12 @@ export default [
     {
         path: '/',
         method: 'get',
-        handler: [
-            async (req: Request, res: Response) => {
-                if (req.user !== undefined) {
-                    res.send('main');
-                } else {
-                    res.redirect('/login');
-                }
+        handler: (req: Request, res: Response) => {
+            if (req.user !== undefined) {
+                res.send('main');
+            } else {
+                res.redirect('/login');
             }
-        ]
+        }
     }
 ];

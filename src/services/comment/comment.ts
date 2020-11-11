@@ -11,8 +11,8 @@ export class Comment {
     @Column({ type: 'uuid' })
     id_ev: string;
 
-    @Column({ type: 'jsonb' })
-    info: {};
+    @Column({ type: 'jsonb', nullable: true })
+    info: {} | null;
 
     @Column({ type: 'text' })
     content: number;

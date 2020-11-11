@@ -1,14 +1,14 @@
 import {
     Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn
 } from 'typeorm';
-import { User } from '@services/users/user';
+import { User } from '@services/user/user';
 
 @Entity()
 export class Ticket {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'varying character', length: 100 })
+    @Column({ type: 'character varying', length: 100 })
     email: string;
 
     @Column({ type: 'money' })

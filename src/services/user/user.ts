@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 import { Ticket } from '@services/ticket/ticket';
 
-import crypto, { scrypt } from 'crypto';
+import crypto from 'crypto';
 import dotenv from 'dotenv';
 
 dotenv.config();
