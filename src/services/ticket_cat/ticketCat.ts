@@ -3,6 +3,7 @@ import {
 } from 'typeorm';
 import { Date } from '@services/date/date';
 import { PricePolicy } from '@services/price_policy/price_policy';
+import { Promocode } from '@services/promocode/promocode';
 
 @Entity({ name: 'member' })
 export class TicketCat {
@@ -31,4 +32,8 @@ export class TicketCat {
     @OneToMany(() => PricePolicy, price_policy => price_policy.date)
     @JoinColumn({ name: 'id' })
     price_policy: PricePolicy[];
+
+    @ManyToOne(() => Promocode, promocode => promocode.ticket_cat)
+    @JoinColumn({ name: 'id' })
+    promocodes: Promocode[];
 }

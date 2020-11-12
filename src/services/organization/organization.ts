@@ -1,7 +1,8 @@
 import {
-    Entity, Column, OneToMany, JoinColumn, PrimaryGeneratedColumn
+    Entity, Column, OneToMany, JoinColumn, PrimaryGeneratedColumn, OneToOne
 } from 'typeorm';
 import { Event } from '@services/event/event';
+import { AppReg } from '@services/app_reg/app_reg';
 
 @Entity({ name: 'organization' })
 export class Organization {
@@ -62,4 +63,8 @@ export class Organization {
     @OneToMany(() => Event, event => event.org)
     @JoinColumn({ name: 'id' })
     events: Event[];
+
+    @OneToOne(() => AppReg, app_reg => app_reg.org)
+    @JoinColumn({ name: 'id' })
+    app_reg: AppReg;
 }

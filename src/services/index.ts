@@ -6,6 +6,8 @@ import { Scheme } from '@services/scheme/scheme';
 import { Member } from '@services/member/member';
 import { TicketCat } from '@services/ticket_cat/ticketCat';
 import { PricePolicy } from '@services/price_policy/price_policy';
+import { Promocode } from '@services/promocode/promocode';
+import { AppReg } from '@services/app_reg/app_reg';
 import usersRoutes from './user/usersRoutes';
 import { User } from './user/user';
 import { Ticket } from './ticket/ticket';
@@ -16,6 +18,6 @@ import { Date } from './date/date';
 export default [ ...usersRoutes ];
 export const entities = [ User, Ticket, Organization, Event,
     AppEdit, Comment, Component, Date, Location, Scheme, Member,
-    TicketCat, PricePolicy ];
+    TicketCat, PricePolicy, Promocode, AppReg ];
 export const migrations: any[] = [];
 export const subscribers: any[] = [];

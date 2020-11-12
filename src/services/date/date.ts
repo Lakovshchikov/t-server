@@ -20,6 +20,9 @@ export class Date {
     @Column({ type: 'uuid' })
     id_sh: string;
 
+    @Column({ type: 'timestamp with time zone' })
+    date: string;
+
     @ManyToOne(() => Event, event => event.comments)
     @JoinColumn({ name: 'id' })
     event: Event;
