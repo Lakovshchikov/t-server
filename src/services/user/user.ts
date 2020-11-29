@@ -2,14 +2,28 @@ import {
     Entity, PrimaryColumn, Column, OneToMany, JoinColumn
 } from 'typeorm';
 import { Ticket } from '@services/ticket/ticket';
+import { TConfigNotification, TConfigPermission, TNewUserReqBody, IUser } from '@services/user/userTypes';
+import { validate, ValidationError } from 'class-validator';
 
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const defaultConfigNotification : TConfigNotification = {
+    browser: false,
+    email: false,
+    phone: false,
+    tg: false
+};
+
+const defaultConfigPermission: TConfigPermission = {
+    email: false,
+    phone: false
+};
+
 @Entity({ name: 'user' })
-export class User {
+export class User implements IUser {
     @PrimaryColumn({ type: 'character varying', length: 100 })
     email: string;
 
@@ -31,11 +45,14 @@ export class User {
     @Column({ type: 'character varying', length: 30, nullable: true })
     phone: string | null;
 
-    @Column({ type: 'jsonb' })
-    config_notification: {};
+    @Column({ type: 'boolean' })
+    temp_pass: boolean;
 
     @Column({ type: 'jsonb' })
-    config_permission: {};
+    config_notification: TConfigNotification = defaultConfigNotification;
+
+    @Column({ type: 'jsonb' })
+    config_permission: TConfigPermission = defaultConfigPermission;
 
     @OneToMany(() => Ticket, ticket => ticket.user)
     @JoinColumn({ name: 'id' })
@@ -44,11 +61,16 @@ export class User {
     validPass = function (pass: string): boolean {
         let hash = crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
             1000, 64, 'sha512').toString('hex');
-        debugger;
         return hash === this.pass;
     };
 
-    // validUser = function (data): boolean {
-    //
-    // };
+    static getHashPass(pass: string): string {
+        return crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
+            1000, 64, 'sha512').toString('hex');
+    }
+
+    static validUser = function (data: TNewUserReqBody): Promise<ValidationError[]> {
+        return validate(data, { skipMissingProperties: true })
+            .then((errors: ValidationError[]) => errors);
+    };
 }

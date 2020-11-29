@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import passport from 'passport';
 import path from 'path';
+import { TNewUserReqBody, TResponse } from '@services/user/userTypes';
 import usersController from './usersController';
 
 export default [
+    // Аутентификация пользователя
     {
         path: '/login',
         method: 'post',
@@ -14,6 +16,7 @@ export default [
             }
         ]
     },
+    // Страница регистрации пользователя (d)
     {
         path: '/login',
         method: 'get',
@@ -25,13 +28,32 @@ export default [
             }
         }
     },
+    // Регистрация пользователя
     {
         path: '/reg',
         method: 'post',
-        handler: (req: Request, res: Response) => {
-
+        handler: async (req: Request, res: Response) => {
+            try {
+                const response:TResponse = await usersController.registerUser(req.body);
+                if (response.isSuccess) {
+                    req.login(response.data, (err) => {
+                        if (err) {
+                            console.error(err);
+                            res.redirect('/login');
+                            return;
+                        }
+                        res.redirect('/');
+                    });
+                } else {
+                    console.error(response.error.message);
+                    res.status(403).send(response.error);
+                }
+            } catch (e) {
+                res.status(500);
+            }
         }
     },
+    // Логаут пользователя
     {
         path: '/logout',
         method: 'get',
@@ -41,12 +63,14 @@ export default [
             res.redirect('/login');
         }
     },
+    // Редактирование информации о пользователе
     {
         path: '/user',
         method: 'post',
         handler: (req: Request, res: Response) => {
         }
     },
+    // Страница пользователя
     {
         path: '/user',
         method: 'get',
@@ -59,6 +83,7 @@ export default [
             }
         }
     },
+    // Главная страница
     {
         path: '/',
         method: 'get',

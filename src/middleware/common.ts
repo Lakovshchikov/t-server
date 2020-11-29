@@ -26,7 +26,6 @@ const sessionSettings: SessionOptions = {
     }
 };
 
-// TO DO создавать дефолтный Pool
 export function initConfig():Promise<boolean> {
     const promise = new Promise<boolean>((resolve, reject) => {
         try {
