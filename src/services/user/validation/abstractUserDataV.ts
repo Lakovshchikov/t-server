@@ -2,9 +2,9 @@ import {
     Matches, MaxLength, MinLength, IsEmail, IsDefined, IsString, IsOptional, IsPhoneNumber, IsBoolean, IsNotEmpty
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { TNewUserReqBody } from './userTypes';
+import { TUserReqData } from '../userTypes';
 
-export class UserValidator implements TNewUserReqBody {
+export abstract class AbstractUserDataV implements TUserReqData {
     @IsDefined()
     @IsEmail()
     @MaxLength(100, {
@@ -15,7 +15,6 @@ export class UserValidator implements TNewUserReqBody {
     })
     email: string;
 
-    @IsDefined()
     @IsString()
     @MaxLength(50, {
         message: 'Name is too long. Max length is $constraint1 characters.'
@@ -25,7 +24,6 @@ export class UserValidator implements TNewUserReqBody {
     })
     name: string;
 
-    @IsDefined()
     @IsString()
     @MaxLength(50, {
         message: 'Second name is too long. Max length is $constraint1 characters.'
@@ -43,7 +41,7 @@ export class UserValidator implements TNewUserReqBody {
     @IsPhoneNumber('RU')
     phone: string | null;
 
-    @IsDefined()
+    // @IsDefined()
     @IsString()
     @MaxLength(50, {
         message: 'Pass is too long. Max length is $constraint1 characters.'

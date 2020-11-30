@@ -10,19 +10,19 @@ export type TConfigPermission = {
     phone: boolean,
 };
 
-export type TNewUserReqBody = {
+export type TUserReqData = {
     email: string,
-    name: string,
-    second_name: string,
-    part_name: string | null,
-    pass: string,
-    phone: string,
-    n_email : boolean | null,
-    n_phone : boolean | null,
-    n_tg: boolean | null,
-    n_browser: boolean | null
-    p_email: boolean | null,
-    p_phone: boolean | null
+    name?: string,
+    second_name?: string,
+    part_name?: string,
+    pass?: string,
+    phone?: string,
+    n_email?: boolean,
+    n_phone?: boolean,
+    n_tg?: boolean,
+    n_browser?: boolean,
+    p_email?: boolean,
+    p_phone?: boolean
 };
 
 export type TResponse = {

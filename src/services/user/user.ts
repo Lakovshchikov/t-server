@@ -2,9 +2,8 @@ import {
     Entity, PrimaryColumn, Column, OneToMany, JoinColumn
 } from 'typeorm';
 import { Ticket } from '@services/ticket/ticket';
-import { TConfigNotification, TConfigPermission, TNewUserReqBody, IUser } from '@services/user/userTypes';
+import { TConfigNotification, TConfigPermission, TUserReqData, IUser } from '@services/user/userTypes';
 import { validate, ValidationError } from 'class-validator';
-import { UserValidator } from '@services/user/userValidator';
 
 import crypto from 'crypto';
 import dotenv from 'dotenv';
@@ -23,30 +22,41 @@ const defaultConfigPermission: TConfigPermission = {
     phone: false
 };
 
+const setNull = function (v: any, currentVal: any | null) {
+    let r;
+    if (v) {
+        r = v;
+    } else {
+        r = currentVal !== undefined ? currentVal : null;
+    }
+    return r;
+};
+
+const setBool = function (v: any, currentVal: any | null) {
+    let r;
+    if (v) {
+        r = v;
+    } else {
+        r = currentVal !== undefined ? currentVal : false;
+    }
+    return r;
+};
+
 @Entity({ name: 'user' })
 export class User implements IUser {
-    constructor(data: UserValidator | null) {
-        if (data) {
-            this.email = data.email;
-            this.pass = User.getHashPass(data.pass);
-            this.name = data.name;
-            this.second_name = data.second_name;
-            this.patr_name = data.part_name ? data.part_name : null;
-            this.phone = data.phone ? data.phone : null;
-            this.isAdmin = false;
-            this.temp_pass = false;
-            this.config_notification = {
-                browser: data.n_browser || false,
-                email: data.n_email || false,
-                phone: data.n_phone || false,
-                tg: data.n_tg || false
-            };
-            this.config_permission = {
-                email: data.p_email || false,
-                phone: data.p_phone || false
-            };
-        }
+    constructor(data: TUserReqData | null) {
+        if (data) this.setUserProperties(data);
     }
+
+    static getHashPass(pass: string): string {
+        return crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
+            1000, 64, 'sha512').toString('hex');
+    }
+
+    static validUser = function (data: TUserReqData): Promise<ValidationError[]> {
+        return validate(data, { skipMissingProperties: true })
+            .then((errors: ValidationError[]) => errors);
+    };
 
     @PrimaryColumn({ type: 'character varying', length: 100 })
     email: string;
@@ -88,13 +98,24 @@ export class User implements IUser {
         return hash === this.pass;
     };
 
-    static getHashPass(pass: string): string {
-        return crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
-            1000, 64, 'sha512').toString('hex');
-    }
-
-    static validUser = function (data: TNewUserReqBody): Promise<ValidationError[]> {
-        return validate(data, { skipMissingProperties: true })
-            .then((errors: ValidationError[]) => errors);
+    setUserProperties = function (data: TUserReqData | null) {
+        this.email = data.email;
+        this.pass = data.pass ? User.getHashPass(data.pass) : this.pass;
+        this.name = data.name ? data.name : this.name;
+        this.second_name = data.second_name ? data.second_name : this.second_name;
+        this.patr_name = setNull(data.part_name, this.part_name);
+        this.phone = setNull(data.phone, this.phone);
+        this.isAdmin = false;
+        this.temp_pass = false;
+        this.config_notification = {
+            browser: setBool(data.n_browser, this.browser),
+            email: setBool(data.n_email, this.email),
+            phone: setBool(data.n_phone, this.phone),
+            tg: setBool(data.n_tg, this.tg)
+        };
+        this.config_permission = {
+            email: setBool(data.p_email, this.email),
+            phone: setBool(data.p_phone, this.phone)
+        };
     };
 }

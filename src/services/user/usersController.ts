@@ -1,9 +1,10 @@
 import { DbProvider } from '@services/user/providers/dbProvider';
 import { User } from '@services/user/user';
-import { TNewUserReqBody, TResponse } from '@services/user/userTypes';
+import { TUserReqData, TResponse } from '@services/user/userTypes';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
-import { UserValidator } from '@services/user/userValidator';
+import { UserDataV } from './validation/userDataV';
+import { NewUserDataV } from './validation/newUserDataV';
 
 class UserController {
     getUserByEmail = async (email: string): Promise<User> => {
@@ -11,24 +12,14 @@ class UserController {
         return user;
     };
 
-    registerUser = async (data: TNewUserReqBody): Promise<TResponse> => {
-        const userData = plainToClass(UserValidator, data);
+    registerUser = async (data: TUserReqData): Promise<TResponse> => {
+        const userData = plainToClass(NewUserDataV, data);
         const errors:ValidationError[] = await User.validUser(userData);
         let response: TResponse;
         if (errors.length > 0) {
-            let errorTexts: any[] = [];
-            for (const errorItem of errors) {
-                errorTexts = errorTexts.concat(errorItem.constraints);
-                response = {
-                    isSuccess: false,
-                    error: {
-                        message: 'Validation error',
-                        data: errorTexts
-                    }
-                };
-            }
+            response = this.sendValidationError(errors);
         } else {
-            let user = await this.getUserByEmail(data.email);
+            const user = await this.getUserByEmail(data.email);
             if (user) {
                 response = {
                     isSuccess: false,
@@ -42,6 +33,43 @@ class UserController {
         }
         return response;
     };
+
+    changeUserInfo = async (data: TUserReqData): Promise<TResponse> => {
+        const userData = plainToClass(UserDataV, data);
+        const errors:ValidationError[] = await User.validUser(userData);
+        let response: TResponse;
+        if (errors.length > 0) {
+            response = this.sendValidationError(errors);
+        } else {
+            const user = await this.getUserByEmail(data.email);
+            if (user) {
+                response = await DbProvider.updateUser(userData);
+            } else {
+                response = {
+                    isSuccess: false,
+                    error: {
+                        message: 'User with this email does not exist'
+                    }
+                };
+            }
+        }
+        return response;
+    };
+
+    private sendValidationError(errors:ValidationError[]) {
+        let errorTexts: any[] = [];
+        for (const errorItem of errors) {
+            errorTexts = errorTexts.concat(errorItem.constraints);
+        }
+        const response = {
+            isSuccess: false,
+            error: {
+                message: 'Validation error',
+                data: errorTexts
+            }
+        };
+        return response;
+    }
 }
 
 const userController = new UserController();

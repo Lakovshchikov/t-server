@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import passport from 'passport';
 import path from 'path';
-import { TNewUserReqBody, TResponse } from '@services/user/userTypes';
+import { TResponse } from '@services/user/userTypes';
 import usersController from './usersController';
 
 export default [
@@ -12,7 +12,7 @@ export default [
         handler: [
             passport.authenticate('local', { failureRedirect: '/login' }),
             (req: Request, res: Response) => {
-                res.redirect('/');
+                res.redirect('/user');
             }
         ]
     },
@@ -49,7 +49,7 @@ export default [
                     res.status(403).send(response.error);
                 }
             } catch (e) {
-                res.status(500);
+                res.status(500).send(e.message);
             }
         }
     },
@@ -67,7 +67,22 @@ export default [
     {
         path: '/user',
         method: 'post',
-        handler: (req: Request, res: Response) => {
+        handler: async (req: Request, res: Response) => {
+            const { user } = req;
+            if (user !== undefined) {
+                const response: TResponse = await usersController.changeUserInfo({
+                    // @ts-ignore
+                    ...req.body, email: user.email
+                });
+                if (response.isSuccess) {
+                    res.redirect('/user');
+                } else {
+                    console.error(response.error.message);
+                    res.status(403).send(response.error);
+                }
+            } else {
+                res.status(401).send();
+            }
         }
     },
     // Страница пользователя
@@ -75,11 +90,10 @@ export default [
         path: '/user',
         method: 'get',
         handler: async (req: Request, res: Response) => {
-            const user = await usersController.getUserByEmail(req.query.email.toString());
-            if (user) {
-                res.send(user.name);
+            if (req.user !== undefined) {
+                res.sendFile(path.resolve(__dirname, '../../static/changeInfoUser.html'));
             } else {
-                res.send('not found');
+                res.redirect('/login');
             }
         }
     },
