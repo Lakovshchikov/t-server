@@ -4,6 +4,7 @@ import {
 import { Ticket } from '@services/ticket/ticket';
 import { TConfigNotification, TConfigPermission, TNewUserReqBody, IUser } from '@services/user/userTypes';
 import { validate, ValidationError } from 'class-validator';
+import { UserValidator } from '@services/user/userValidator';
 
 import crypto from 'crypto';
 import dotenv from 'dotenv';
@@ -24,6 +25,29 @@ const defaultConfigPermission: TConfigPermission = {
 
 @Entity({ name: 'user' })
 export class User implements IUser {
+    constructor(data: UserValidator | null) {
+        if (data) {
+            this.email = data.email;
+            this.pass = User.getHashPass(data.pass);
+            this.name = data.name;
+            this.second_name = data.second_name;
+            this.patr_name = data.part_name ? data.part_name : null;
+            this.phone = data.phone ? data.phone : null;
+            this.isAdmin = false;
+            this.temp_pass = false;
+            this.config_notification = {
+                browser: data.n_browser || false,
+                email: data.n_email || false,
+                phone: data.n_phone || false,
+                tg: data.n_tg || false
+            };
+            this.config_permission = {
+                email: data.p_email || false,
+                phone: data.p_phone || false
+            };
+        }
+    }
+
     @PrimaryColumn({ type: 'character varying', length: 100 })
     email: string;
 
