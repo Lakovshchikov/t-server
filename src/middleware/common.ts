@@ -22,7 +22,8 @@ const sessionSettings: SessionOptions = {
     saveUninitialized: true,
     cookie: {
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 3600 * 24
+        maxAge: 3600 * 24,
+        httpOnly: true
     }
 };
 
