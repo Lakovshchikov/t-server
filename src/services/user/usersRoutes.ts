@@ -108,5 +108,35 @@ export default [
                 res.redirect('/login');
             }
         }
+    },
+    // Тест клиентской авторизации ВК
+    {
+        path: '/vk',
+        method: 'get',
+        handler: (req: Request, res: Response) => {
+            res.sendFile(path.resolve(__dirname, '../../static/vk.html'));
+        }
+    },
+    {
+        path: '/vk/cb',
+        method: 'get',
+        handler: (req: Request, res: Response) => {
+            res.sendFile(path.resolve(__dirname, '../../static/vk_cb.html'));
+        }
+    },
+    // Тест клиентской авторизации Google
+    {
+        path: '/google',
+        method: 'get',
+        handler: (req: Request, res: Response) => {
+            res.sendFile(path.resolve(__dirname, '../../static/google.html'));
+        }
+    },
+    {
+        path: '/google/cb',
+        method: 'get',
+        handler: (req: Request, res: Response) => {
+            res.sendFile(path.resolve(__dirname, '../../static/google_cb.html'));
+        }
     }
 ];
