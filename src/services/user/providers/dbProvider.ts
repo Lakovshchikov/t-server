@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { TResponse } from '@services/user/userTypes';
 import { AbstractUserDataV } from '../validation/abstractUserDataV';
 
-export class DbProvider {
+export abstract class DbProvider {
     static async getUserByEmail(email: string): Promise<User> {
         const userRepository = await getRepository(User);
         const user = await userRepository
