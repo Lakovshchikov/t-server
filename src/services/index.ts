@@ -8,14 +8,16 @@ import { TicketCat } from '@services/ticket_cat/ticketCat';
 import { PricePolicy } from '@services/price_policy/price_policy';
 import { Promocode } from '@services/promocode/promocode';
 import { AppReg } from '@services/app_reg/app_reg';
-import usersRoutes from './user/usersRoutes';
 import { User } from './user/user';
 import { Ticket } from './ticket/ticket';
 import { Organization } from './organization/organization';
 import { Component } from './component/component';
 import { Date } from './date/date';
 
-export default [ ...usersRoutes ];
+import usersRoutes from './user/usersRoutes';
+import commentRoute from './comment/commentRoute';
+
+export default [ ...usersRoutes, ...commentRoute ];
 export const entities = [ User, Ticket, Organization, Event,
     AppEdit, Comment, Component, Date, Location, Scheme, Member,
     TicketCat, PricePolicy, Promocode, AppReg ];

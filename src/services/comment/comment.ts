@@ -15,7 +15,7 @@ export class Comment {
     info: {} | null;
 
     @Column({ type: 'text' })
-    content: number;
+    content: string;
 
     @ManyToOne(() => Event, event => event.comments)
     @JoinColumn({ name: 'id' })
