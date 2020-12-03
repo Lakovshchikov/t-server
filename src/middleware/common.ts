@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import parser from 'body-parser';
 import session, { SessionOptions } from 'express-session';
@@ -19,7 +19,7 @@ const sessionSettings: SessionOptions = {
     secret: process.env.SESSION_SECRET,
     resave: false,
     name: 'ticket_o.sid',
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         maxAge: 3600 * 24,
@@ -54,6 +54,19 @@ export const handleBodyRequestParsing = (router: Router) => {
 
 export const handleCompression = (router: Router) => {
     router.use(compression());
+};
+
+export const handleChangeSessionSettings = (router: Router) => {
+    router.use((req: Request, res: Response, next: NextFunction) => {
+        // TO DO Не работает переименовывание куки, не мешает, но стоит починить
+        if (!req.originalUrl.indexOf('/org')) {
+            sessionSettings.cookie.path = '/org';
+            sessionSettings.name = 'ticket_o.org';
+        } else {
+            sessionSettings.cookie.path = '/';
+        }
+        next();
+    });
 };
 
 export const handleSession = (router: Router) => {

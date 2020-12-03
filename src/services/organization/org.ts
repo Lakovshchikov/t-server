@@ -3,9 +3,11 @@ import {
 } from 'typeorm';
 import { Event } from '@services/event/event';
 import { AppReg } from '@services/app_reg/app_reg';
+import crypto from 'crypto';
+import { IOrganization, EOrgForm, ETaxSystem } from './orgTypes';
 
 @Entity({ name: 'organization' })
-export class Organization {
+export class Organization implements IOrganization {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -15,8 +17,8 @@ export class Organization {
     @Column({ type: 'text' })
     pass: string;
 
-    @Column({ type: 'smallint' }) // TO DO
-    org_form: number;
+    @Column({ type: 'smallint' })
+    org_form: ETaxSystem;
 
     @Column({ type: 'text' })
     address: string;
@@ -33,8 +35,8 @@ export class Organization {
     @Column({ type: 'character varying', length: 50 })
     country: string;
 
-    @Column({ type: 'smallint' }) // TO DO
-    tax_system: number;
+    @Column({ type: 'smallint' })
+    tax_system: EOrgForm;
 
     @Column({ type: 'boolean' })
     vat_ticket: boolean;
@@ -67,4 +69,10 @@ export class Organization {
     @OneToOne(() => AppReg, app_reg => app_reg.org)
     @JoinColumn({ name: 'id' })
     app_reg: AppReg;
+
+    validPass = function (pass: string): boolean {
+        let hash = crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
+            1000, 64, 'sha512').toString('hex');
+        return hash === this.pass;
+    };
 }

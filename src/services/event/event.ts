@@ -1,7 +1,7 @@
 import {
     Entity, Column, JoinColumn, PrimaryGeneratedColumn, ManyToOne, OneToMany
 } from 'typeorm';
-import { Organization } from '@services/organization/organization';
+import { Organization } from '@services/organization/org';
 import { AppEdit } from '@services/app_edit/appEdit';
 import { Comment } from '@services/comment/comment';
 import { Component } from '@services/component/component';

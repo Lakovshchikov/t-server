@@ -10,7 +10,7 @@ export default [
         path: '/login',
         method: 'post',
         handler: [
-            passport.authenticate('local', { failureRedirect: '/login' }),
+            passport.authenticate('localUser', { failureRedirect: '/login' }),
             (req: Request, res: Response) => {
                 res.redirect('/user');
             }
