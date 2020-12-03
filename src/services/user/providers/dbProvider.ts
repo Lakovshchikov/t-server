@@ -8,7 +8,6 @@ export abstract class DbProvider {
         const userRepository = await getRepository(User);
         const user = await userRepository
             .createQueryBuilder('user')
-            .leftJoinAndSelect('user.tickets', 'ticket')
             .where('user.email = :email', { email: email })
             .getOne();
 

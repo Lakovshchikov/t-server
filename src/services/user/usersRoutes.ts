@@ -90,7 +90,8 @@ export default [
         path: '/user',
         method: 'get',
         handler: async (req: Request, res: Response) => {
-            if (req.user !== undefined) {
+            const { user } = req;
+            if (user !== undefined) {
                 res.sendFile(path.resolve(__dirname, '../../static/changeInfoUser.html'));
             } else {
                 res.redirect('/login');
@@ -102,7 +103,8 @@ export default [
         path: '/',
         method: 'get',
         handler: (req: Request, res: Response) => {
-            if (req.user !== undefined) {
+            const { user } = req;
+            if (user !== undefined) {
                 res.send('main');
             } else {
                 res.redirect('/login');
