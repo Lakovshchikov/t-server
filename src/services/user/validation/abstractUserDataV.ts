@@ -41,7 +41,6 @@ export abstract class AbstractUserDataV implements TUserReqData {
     @IsPhoneNumber('RU')
     phone: string | null;
 
-    // @IsDefined()
     @IsString()
     @MaxLength(50, {
         message: 'Pass is too long. Max length is $constraint1 characters.'

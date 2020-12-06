@@ -41,7 +41,7 @@ export interface IUser {
 
     second_name: string;
 
-    patr_name: string | null;
+    part_name: string | null;
 
     pass: string;
 

@@ -22,30 +22,10 @@ const defaultConfigPermission: TConfigPermission = {
     phone: false
 };
 
-const setNull = function (v: any, currentVal: any | null) {
-    let r;
-    if (v) {
-        r = v;
-    } else {
-        r = currentVal !== undefined ? currentVal : null;
-    }
-    return r;
-};
-
-const setBool = function (v: any, currentVal: any | null) {
-    let r;
-    if (v) {
-        r = v;
-    } else {
-        r = currentVal !== undefined ? currentVal : false;
-    }
-    return r;
-};
-
 @Entity({ name: 'user' })
 export class User implements IUser {
     constructor(data: TUserReqData | null) {
-        if (data) this.setUserProperties(data);
+        if (data) this.setProperties(data);
     }
 
     static getHashPass(pass: string): string {
@@ -68,7 +48,7 @@ export class User implements IUser {
     second_name: string;
 
     @Column({ name: 'p_name', type: 'text', nullable: true })
-    patr_name: string | null;
+    part_name: string | null;
 
     @Column({ type: 'text' })
     pass: string;
@@ -93,29 +73,48 @@ export class User implements IUser {
     tickets: Ticket[];
 
     validPass = function (pass: string): boolean {
-        let hash = crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
-            1000, 64, 'sha512').toString('hex');
+        let hash = User.getHashPass(pass);
         return hash === this.pass;
     };
 
-    setUserProperties = function (data: TUserReqData | null) {
+    setProperties = (data: TUserReqData | null) => {
         this.email = data.email;
         this.pass = data.pass ? User.getHashPass(data.pass) : this.pass;
         this.name = data.name ? data.name : this.name;
         this.second_name = data.second_name ? data.second_name : this.second_name;
-        this.patr_name = setNull(data.part_name, this.part_name);
-        this.phone = setNull(data.phone, this.phone);
+        this.part_name = this.setNull(data.part_name, this.part_name);
+        this.phone = this.setNull(data.phone, this.phone);
         this.isAdmin = false;
         this.temp_pass = false;
         this.config_notification = {
-            browser: setBool(data.n_browser, this.browser),
-            email: setBool(data.n_email, this.email),
-            phone: setBool(data.n_phone, this.phone),
-            tg: setBool(data.n_tg, this.tg)
+            browser: this.setBool(data.n_browser, this.config_notification?.browser),
+            email: this.setBool(data.n_email, this.config_notification?.email),
+            phone: this.setBool(data.n_phone, this.config_notification?.phone),
+            tg: this.setBool(data.n_tg, this.config_notification?.tg)
         };
         this.config_permission = {
-            email: setBool(data.p_email, this.email),
-            phone: setBool(data.p_phone, this.phone)
+            email: this.setBool(data.p_email, this.config_permission?.email),
+            phone: this.setBool(data.p_phone, this.config_permission?.phone)
         };
+    };
+
+    private setNull = (value: any, currentVal: any | null) => {
+        let result;
+        if (value) {
+            result = value;
+        } else {
+            result = currentVal !== undefined ? currentVal : null;
+        }
+        return result;
+    };
+
+    private setBool = (value: any, currentVal: any | null) => {
+        let result;
+        if (value) {
+            result = value;
+        } else {
+            result = currentVal !== undefined ? currentVal : false;
+        }
+        return result;
     };
 }
