@@ -1,22 +1,35 @@
 import passport from 'passport';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import orgController from './orgController';
 import { TResponse } from './orgTypes';
+import { Organization } from './org';
+
+const checkUserType = (req: Request, res: Response, next: NextFunction) => {
+    const { user } = req;
+    if (user instanceof Organization) {
+        next();
+    } else {
+        res.redirect(401, '/org/login');
+    }
+};
 
 export default [
     // Страница авторизации организации
     {
         path: '/org/login',
         method: 'get',
-        handler: async (req: Request, res: Response) => {
-            const { user } = req;
-            if (user !== undefined) {
-                res.redirect('/org');
-            } else {
-                res.sendFile(path.resolve(__dirname, '../../static/org/org_login.html'));
+        handler: [
+            async (req: Request, res: Response) => {
+                const { user } = req;
+                if (user instanceof Organization) {
+                    res.redirect('/org');
+                } else {
+                    // res.sendStatus(200);
+                    res.sendFile(path.resolve(__dirname, '../../static/org/org_login.html'));
+                }
             }
-        }
+        ]
     },
     // Авторизация организации
     {
@@ -33,14 +46,12 @@ export default [
     {
         path: '/org',
         method: 'get',
-        handler: async (req: Request, res: Response) => {
-            const { user } = req;
-            if (user !== undefined) {
+        handler: [
+            checkUserType,
+            async (req: Request, res: Response) => {
                 res.sendFile(path.resolve(__dirname, '../../static/org/org.html'));
-            } else {
-                res.redirect('/org/login');
             }
-        }
+        ]
     },
     // // Изменение информации о организации
     // {

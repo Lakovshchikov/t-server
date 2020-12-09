@@ -3,8 +3,7 @@ import {
     handleBodyRequestParsing,
     handleCompression,
     handleSession,
-    initConfig,
-    handleChangeSessionSettings
+    initConfig
 } from './common';
 
 import { handleAuth } from './auth';
@@ -14,4 +13,4 @@ export async function initMiddleware() {
     return promise;
 }
 
-export default [ handleCors, handleBodyRequestParsing, handleChangeSessionSettings, handleSession, handleCompression, handleAuth ];
+export default [ handleCors, handleBodyRequestParsing, handleSession, handleCompression, handleAuth ];

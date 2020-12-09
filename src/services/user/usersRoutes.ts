@@ -1,8 +1,19 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import path from 'path';
 import { TResponse } from '@services/user/userTypes';
 import usersController from './usersController';
+import { User } from './user';
+
+const checkUserType = (req: Request, res: Response, next: NextFunction) => {
+    const { user } = req;
+    if (user instanceof User) {
+        next();
+    } else {
+        res.redirect(401, '/login');
+        // res.status(401).location('/login').end();
+    }
+};
 
 export default [
     // Аутентификация пользователя
@@ -20,13 +31,17 @@ export default [
     {
         path: '/login',
         method: 'get',
-        handler: (req: Request, res: Response) => {
-            if (req.user !== undefined) {
-                res.redirect('/');
-            } else {
-                res.sendFile(path.resolve(__dirname, '../../static/index.html'));
+        handler: [
+            (req: Request, res: Response) => {
+                const { user } = req;
+                if (user instanceof User) {
+                    res.redirect('/user');
+                } else {
+                    // res.sendStatus(200);
+                    res.sendFile(path.resolve(__dirname, '../../static/login.html'));
+                }
             }
-        }
+        ]
     },
     // Регистрация пользователя
     {
@@ -60,16 +75,17 @@ export default [
         handler: (req: Request, res: Response) => {
             req.logOut();
             res.clearCookie('ticket_o.sid');
-            res.redirect('/login');
+            res.redirect('/');
         }
     },
     // Редактирование информации о пользователе
     {
         path: '/user',
         method: 'post',
-        handler: async (req: Request, res: Response) => {
-            const { user } = req;
-            if (user !== undefined) {
+        handler: [
+            checkUserType,
+            async (req: Request, res: Response) => {
+                const { user } = req;
                 const response: TResponse = await usersController.changeUserInfo({
                     // @ts-ignore
                     ...req.body, email: user.email
@@ -80,35 +96,26 @@ export default [
                     console.error(response.error.message);
                     res.status(403).send(response.error);
                 }
-            } else {
-                res.status(401).send();
             }
-        }
+        ]
     },
     // Страница пользователя
     {
         path: '/user',
         method: 'get',
-        handler: async (req: Request, res: Response) => {
-            const { user } = req;
-            if (user !== undefined) {
+        handler: [
+            checkUserType,
+            async (req: Request, res: Response) => {
                 res.sendFile(path.resolve(__dirname, '../../static/changeInfoUser.html'));
-            } else {
-                res.redirect('/login');
             }
-        }
+        ]
     },
     // Главная страница
     {
         path: '/',
         method: 'get',
         handler: (req: Request, res: Response) => {
-            const { user } = req;
-            if (user !== undefined) {
-                res.send('main');
-            } else {
-                res.redirect('/login');
-            }
+            res.send('main');
         }
     }
 ];

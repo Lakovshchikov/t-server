@@ -56,19 +56,6 @@ export const handleCompression = (router: Router) => {
     router.use(compression());
 };
 
-export const handleChangeSessionSettings = (router: Router) => {
-    router.use((req: Request, res: Response, next: NextFunction) => {
-        // TO DO Не работает переименовывание куки, не мешает, но стоит починить
-        if (!req.originalUrl.indexOf('/org')) {
-            sessionSettings.cookie.path = '/org';
-            sessionSettings.name = 'ticket_o.org';
-        } else {
-            sessionSettings.cookie.path = '/';
-        }
-        next();
-    });
-};
-
 export const handleSession = (router: Router) => {
     router.use(session(sessionSettings));
 };
