@@ -13,24 +13,6 @@ const checkDigit = function (inn: string, coefficients: number[]): number {
     return parseInt(String(n % 11 % 10), 10);
 };
 
-export function IsInEnum(property: any, validationOptions?: ValidationOptions) {
-    return function (object: Object, propertyName: string) {
-        registerDecorator({
-            name: 'IsInEnum',
-            target: object.constructor,
-            propertyName: propertyName,
-            constraints: [ property ],
-            options: validationOptions,
-            validator: {
-                validate(value: any, args: ValidationArguments) {
-                    const constraintsEnum = args.constraints[0];
-                    return value in constraintsEnum;
-                }
-            }
-        });
-    };
-}
-
 export function IsOGRN(validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({

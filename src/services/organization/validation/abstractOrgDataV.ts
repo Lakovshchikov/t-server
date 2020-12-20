@@ -1,13 +1,13 @@
 import {
-    Matches, MaxLength, MinLength, IsEmail, IsDefined, IsString, IsOptional, IsNumber, IsBoolean, IsNotEmpty, IsIn,
-    registerDecorator, ValidationOptions, ValidationArguments
+    Matches, MaxLength, MinLength, IsEmail, IsDefined, IsString, IsOptional, IsNumber, IsBoolean
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import {
     EOrgForm, EReason, ETaxSystem, TOrgReqData, ECountry
 } from '@services/organization/orgTypes';
+import { IsInEnum } from 'validation/dist';
 import {
-    IsInEnum, IsOGRN, IsCheckingAccount, IsCorrespondentAccount, IsINN
+    IsOGRN, IsCheckingAccount, IsCorrespondentAccount, IsINN
 } from './validation';
 
 export abstract class AbstractOrgDataV implements TOrgReqData {
