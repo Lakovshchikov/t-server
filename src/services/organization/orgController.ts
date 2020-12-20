@@ -5,6 +5,7 @@ import { DbProvider } from './providers/dbProvider';
 import { TOrgReqData, TResponse } from './orgTypes';
 import { NewOrgDataV } from './validation/newOrgDataV';
 import { EditOrgDataV } from './validation/editOrgDataV';
+import OrgFacade from './facade/orgFacade';
 
 class OrgController {
     getUserByEmail = async (email: string): Promise<Organization> => {
@@ -14,9 +15,9 @@ class OrgController {
 
     registerOrg = async (data: TOrgReqData): Promise<TResponse> => {
         const userData = plainToClass(NewOrgDataV, data);
-        const errors:ValidationError[] = await Organization.validOrg(userData);
+        const errors:ValidationError[] = await Organization.validate(userData);
         let response: TResponse;
-        if (errors.length > 0) {
+        if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
             const org = await this.getUserByEmail(data.email);
@@ -29,6 +30,12 @@ class OrgController {
                 };
             } else {
                 response = await DbProvider.createUser(userData);
+                const responseAr = await OrgFacade.createAppReg({
+                    id_org: response.data.id
+                });
+                if (responseAr.isSuccess === false) {
+                    return responseAr;
+                }
             }
         }
         return response;
@@ -36,9 +43,9 @@ class OrgController {
 
     changeOrgInfo = async (data: TOrgReqData): Promise<TResponse> => {
         const userData = plainToClass(EditOrgDataV, data);
-        const errors:ValidationError[] = await Organization.validOrg(userData);
+        const errors:ValidationError[] = await Organization.validate(userData);
         let response: TResponse;
-        if (errors.length > 0) {
+        if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
             const org = await this.getUserByEmail(data.email);
