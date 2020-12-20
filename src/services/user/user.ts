@@ -33,7 +33,7 @@ export class User implements IUser {
             1000, 64, 'sha512').toString('hex');
     }
 
-    static validUser = function (data: TUserReqData): Promise<ValidationError[]> {
+    static validate = function (data: TUserReqData): Promise<ValidationError[]> {
         return validate(data, { skipMissingProperties: true })
             .then((errors: ValidationError[]) => errors);
     };

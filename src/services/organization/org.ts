@@ -21,7 +21,7 @@ export class Organization implements IOrganization {
             1000, 64, 'sha512').toString('hex');
     }
 
-    static validOrg = function (data: TOrgReqData): Promise<ValidationError[]> {
+    static validate = function (data: TOrgReqData): Promise<ValidationError[]> {
         return validate(data, { skipMissingProperties: true })
             .then((errors: ValidationError[]) => errors);
     };
@@ -88,7 +88,7 @@ export class Organization implements IOrganization {
     events: Event[];
 
     @OneToOne(() => AppReg, app_reg => app_reg.org)
-    @JoinColumn({ name: 'id' })
+    @JoinColumn({ name: 'id', referencedColumnName: 'id_org' })
     app_reg: AppReg;
 
     validPass = function (pass: string): boolean {

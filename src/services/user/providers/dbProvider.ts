@@ -4,6 +4,7 @@ import { TResponse } from '@services/user/userTypes';
 import { AbstractUserDataV } from '../validation/abstractUserDataV';
 
 export abstract class DbProvider {
+    // TO DO try catch dbError
     static async getUserByEmail(email: string): Promise<User> {
         const userRepository = await getRepository(User);
         const user = await userRepository

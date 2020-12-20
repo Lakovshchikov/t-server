@@ -9,6 +9,7 @@ export abstract class DbProvider {
         const org = await orgRepository
             .createQueryBuilder('organization')
             .where('organization.email = :email', { email: email })
+            .leftJoinAndSelect('organization.app_reg', 'app_reg')
             .getOne();
 
         return org;

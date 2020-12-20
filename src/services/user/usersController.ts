@@ -14,9 +14,9 @@ class UserController {
 
     registerUser = async (data: TUserReqData): Promise<TResponse> => {
         const userData = plainToClass(NewUserDataV, data);
-        const errors:ValidationError[] = await User.validUser(userData);
+        const errors:ValidationError[] = await User.validate(userData);
         let response: TResponse;
-        if (errors.length > 0) {
+        if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
             const user = await this.getUserByEmail(data.email);
@@ -36,9 +36,9 @@ class UserController {
 
     changeUserInfo = async (data: TUserReqData): Promise<TResponse> => {
         const userData = plainToClass(UserDataV, data);
-        const errors:ValidationError[] = await User.validUser(userData);
+        const errors:ValidationError[] = await User.validate(userData);
         let response: TResponse;
-        if (errors.length > 0) {
+        if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
             const user = await this.getUserByEmail(data.email);
