@@ -70,5 +70,8 @@
     "paths": {
       "@services/*": ["services/*"]
     }
-  }
+  },
+  "exclude": [
+    "local_packages"
+  ]
 }
