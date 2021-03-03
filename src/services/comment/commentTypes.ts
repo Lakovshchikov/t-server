@@ -8,7 +8,20 @@ export type TResponse = {
 };
 
 export type TInfo = {
-    [key: string] :any
+    value: string
+};
+
+export type TReqInfo = {
+    comments: TComment[]
+};
+
+export type TCommentReqData = {
+    id_ev: string;
+    info: TReqInfo;
+};
+
+export type TConfirmCommentReqData = {
+    comments: TConfirmComment[]
 };
 
 export interface IComment {
@@ -17,9 +30,27 @@ export interface IComment {
 
     id_ev: string;
 
-    info: {} | null;
+    info: TInfo | null;
 
     content: string;
 
-    event: Event;
+    correct?: boolean | null;
 }
+
+export type TComment = {
+    content: string
+};
+
+export type TReqComment = TComment & {
+    id: string
+};
+
+export type TNNComment = TReqComment & {
+    value: number
+    content?: string
+};
+
+export type TConfirmComment = {
+    id: string,
+    correct: boolean
+};

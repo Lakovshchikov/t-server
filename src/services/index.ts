@@ -17,8 +17,9 @@ import { Date } from './date/date';
 import arRoutes from './app_reg/arRoutes';
 import usersRoutes from './user/usersRoutes';
 import orgRoutes from './organization/orgRoutes';
+import commentRoute from './comment/commentRoute';
 
-export default [ ...usersRoutes, ...orgRoutes, ...arRoutes ];
+export default [ ...usersRoutes, ...orgRoutes, ...arRoutes, ...commentRoute ];
 export const entities = [ User, Ticket, Organization, Event,
     AppEdit, Comment, Component, Date, Location, Scheme, Member,
     TicketCat, PricePolicy, Promocode, AppReg ];

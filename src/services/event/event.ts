@@ -44,7 +44,7 @@ export class Event {
 
     @OneToMany(() => Component, component => component.event)
     @JoinColumn({ name: 'id' })
-    components: Comment[];
+    components: Component[];
 
     @OneToMany(() => Date, date => date.event)
     @JoinColumn({ name: 'id' })

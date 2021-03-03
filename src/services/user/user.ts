@@ -28,10 +28,10 @@ export class User implements IUser {
         if (data) this.setProperties(data);
     }
 
-    static getHashPass(pass: string): string {
+    static getHashPass = function (pass: string): string {
         return crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
             1000, 64, 'sha512').toString('hex');
-    }
+    };
 
     static validate = function (data: TUserReqData): Promise<ValidationError[]> {
         return validate(data, { skipMissingProperties: true })
