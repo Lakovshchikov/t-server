@@ -17,15 +17,6 @@ export enum ECountry {
     RUSSIA = 'Russia'
 }
 
-export type TResponse = {
-    isSuccess: boolean,
-    error?: {
-        message: string,
-        data?: any
-    },
-    data?: any
-};
-
 export type TOrgReqData = {
     email: string,
     pass?: string,

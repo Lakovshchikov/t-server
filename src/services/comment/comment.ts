@@ -36,7 +36,7 @@ export class Comment implements IComment {
     event: Event;
 
     public serialize = (stringify: boolean = false) :IComment | string => {
-        let result: IComment | string = '';
+        let result: IComment | string;
         const obj = {
             id: this.id,
             id_ev: this.id_ev,

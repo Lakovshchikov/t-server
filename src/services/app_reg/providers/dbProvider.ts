@@ -1,11 +1,10 @@
 import { AppReg } from '@services/app_reg/app_reg';
-import { TResponse } from '@services/app_reg/arTypes';
-import { getConnection, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
 
 export abstract class DbProvider {
-    static async createAppReg(data: AbstractAppRegDataV): Promise<TResponse> {
+    static async createAppReg(data: AbstractAppRegDataV): Promise<gt.TResponse> {
         try {
             return this.saveAppReg(data);
         } catch (e) {
@@ -13,7 +12,7 @@ export abstract class DbProvider {
         }
     }
 
-    static async editAppReg(data: AbstractAppRegDataV) :Promise<TResponse> {
+    static async editAppReg(data: AbstractAppRegDataV) :Promise<gt.TResponse> {
         try {
             const appReg = await this.getAppRegById(data.id);
             if (appReg.isSuccess) {
@@ -34,7 +33,7 @@ export abstract class DbProvider {
         }
     }
 
-    static async getAppRegByOrgId(id: string): Promise<TResponse> {
+    static async getAppRegByOrgId(id: string): Promise<gt.TResponse> {
         try {
             const appRepository = await getRepository(AppReg);
             const appReg = await appRepository
@@ -51,7 +50,7 @@ export abstract class DbProvider {
         }
     }
 
-    static async getAppRegById(id: string): Promise<TResponse> {
+    static async getAppRegById(id: string): Promise<gt.TResponse> {
         try {
             const appRepository = await getRepository(AppReg);
             const appReg = await appRepository
@@ -68,7 +67,7 @@ export abstract class DbProvider {
         }
     }
 
-    private static sendDBError(message: string, e: any): TResponse {
+    private static sendDBError(message: string, e: any): gt.TResponse {
         return {
             isSuccess: false,
             error: {
@@ -78,7 +77,7 @@ export abstract class DbProvider {
         };
     }
 
-    private static async saveAppReg(data: AbstractAppRegDataV) :Promise<TResponse> {
+    private static async saveAppReg(data: AbstractAppRegDataV) :Promise<gt.TResponse> {
         const appRepository = await getRepository(AppReg);
         const appReg = new AppReg(data);
         await appRepository.save(appReg);

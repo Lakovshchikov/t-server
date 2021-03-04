@@ -4,15 +4,6 @@ export enum EStatus {
     REJECTED = 3
 }
 
-export type TResponse = {
-    isSuccess: boolean,
-    error?: {
-        message: string,
-        data?: any
-    },
-    data?: any
-};
-
 export type TAppRegReqData = {
     id?: string,
     id_org: string,

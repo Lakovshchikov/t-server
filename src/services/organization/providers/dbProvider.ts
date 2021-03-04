@@ -1,5 +1,4 @@
 import { getRepository } from 'typeorm';
-import { TResponse } from '../orgTypes';
 import { Organization } from '../org';
 import { AbstractOrgDataV } from '../validation/abstractOrgDataV';
 
@@ -15,7 +14,7 @@ export abstract class DbProvider {
         return org;
     }
 
-    static async createUser(data: AbstractOrgDataV): Promise<TResponse> {
+    static async createUser(data: AbstractOrgDataV): Promise<gt.TResponse> {
         try {
             return this.saveUser(data);
         } catch (e) {
@@ -23,7 +22,7 @@ export abstract class DbProvider {
         }
     }
 
-    static async updateUser(data: AbstractOrgDataV): Promise<TResponse> {
+    static async updateUser(data: AbstractOrgDataV): Promise<gt.TResponse> {
         try {
             return this.saveUser(data);
         } catch (e) {
@@ -31,7 +30,7 @@ export abstract class DbProvider {
         }
     }
 
-    private static sendDBError(message: string, e: any): TResponse {
+    private static sendDBError(message: string, e: any): gt.TResponse {
         return {
             isSuccess: false,
             error: {
@@ -41,7 +40,7 @@ export abstract class DbProvider {
         };
     }
 
-    private static async saveUser(data: AbstractOrgDataV): Promise<TResponse> {
+    private static async saveUser(data: AbstractOrgDataV): Promise<gt.TResponse> {
         const orgRepository = await getRepository(Organization);
         const user = new Organization(data);
         await orgRepository.save(user);

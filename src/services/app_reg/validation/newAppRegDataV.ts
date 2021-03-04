@@ -1,6 +1,6 @@
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
 import {
-    IsEmpty, isEmpty, IsOptional, ValidateIf
+    IsEmpty, isEmpty, ValidateIf
 } from 'class-validator';
 
 export class NewAppRegDataV implements AbstractAppRegDataV {

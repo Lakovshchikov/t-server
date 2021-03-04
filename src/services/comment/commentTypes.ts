@@ -1,12 +1,3 @@
-export type TResponse = {
-    isSuccess: boolean,
-    error?: {
-        message: string,
-        data?: any
-    },
-    data?: any
-};
-
 export type TInfo = {
     value: string
 };

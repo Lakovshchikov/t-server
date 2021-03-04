@@ -21,7 +21,7 @@ export class Promocode {
     discount: number;
 
     @Column({ type: 'smallint' })
-    dimension: number;
+    type: number;
 
     @ManyToOne(() => TicketCat, ticket_cat => ticket_cat.promocodes)
     @JoinColumn({ name: 'id' })

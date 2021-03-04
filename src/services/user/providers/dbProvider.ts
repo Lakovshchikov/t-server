@@ -1,6 +1,5 @@
 import { User } from '@services/user/user';
 import { getRepository } from 'typeorm';
-import { TResponse } from '@services/user/userTypes';
 import { AbstractUserDataV } from '../validation/abstractUserDataV';
 
 export abstract class DbProvider {
@@ -15,7 +14,7 @@ export abstract class DbProvider {
         return user;
     }
 
-    static async createUser(data: AbstractUserDataV): Promise<TResponse> {
+    static async createUser(data: AbstractUserDataV): Promise<gt.TResponse> {
         try {
             return this.saveUser(data);
         } catch (e) {
@@ -23,7 +22,7 @@ export abstract class DbProvider {
         }
     }
 
-    static async updateUser(data: AbstractUserDataV): Promise<TResponse> {
+    static async updateUser(data: AbstractUserDataV): Promise<gt.TResponse> {
         try {
             return this.saveUser(data);
         } catch (e) {
@@ -31,7 +30,7 @@ export abstract class DbProvider {
         }
     }
 
-    private static sendDBError(message: string, e: any): TResponse {
+    private static sendDBError(message: string, e: any): gt.TResponse {
         return {
             isSuccess: false,
             error: {
@@ -41,7 +40,7 @@ export abstract class DbProvider {
         };
     }
 
-    private static async saveUser(data: AbstractUserDataV): Promise<TResponse> {
+    private static async saveUser(data: AbstractUserDataV): Promise<gt.TResponse> {
         const userRepository = await getRepository(User);
         const user = new User(data);
         await userRepository.save(user);

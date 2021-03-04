@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import arController from '@services/app_reg/arController';
 import { AppReg } from '@services/app_reg/app_reg';
-import { TResponse } from '@services/app_reg/arTypes';
 
 export default [
     // Получение заявки на регистрацию
@@ -14,14 +13,15 @@ export default [
             async (req: Request, res: Response) => {
                 const { user } = req;
                 let orgId;
-                let appReg: AppReg | TResponse;
+                let response: gt.TResponse;
+                let appReg: AppReg;
                 if (user) {
                     if (arController.checkUser(user) && arController.checkAdminPermission(user)) {
                         orgId = req.query.org_id;
                         if (orgId) {
-                            appReg = await arController.getAppRegByOrgId(orgId.toString());
-                            if (appReg.isSuccess) {
-                                appReg = appReg.data;
+                            response = await arController.getAppRegByOrgId(orgId.toString());
+                            if (response.isSuccess) {
+                                appReg = response.data;
                             } else {
                                 res.sendStatus(404);
                                 return;
@@ -32,7 +32,7 @@ export default [
                         appReg = user.app_reg;
                     }
                     if (appReg) {
-                        if (appReg instanceof AppReg) res.json(appReg.serialize());
+                        res.json(appReg.serialize());
                         return;
                     } else {
                         res.sendStatus(404);

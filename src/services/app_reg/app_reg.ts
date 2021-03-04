@@ -36,7 +36,7 @@ export class AppReg implements IAppOrg {
     org: Organization;
 
     public serialize = (stringify: boolean = false) :IAppOrg | string => {
-        let result: IAppOrg | string = '';
+        let result: IAppOrg | string;
         const obj = {
             id: this.id,
             id_org: this.id_org,

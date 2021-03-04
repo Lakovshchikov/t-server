@@ -25,15 +25,6 @@ export type TUserReqData = {
     p_phone?: boolean
 };
 
-export type TResponse = {
-    isSuccess: boolean,
-    error?: {
-        message: string,
-        data?: any
-    },
-    data?: any
-};
-
 export interface IUser {
     email: string;
 

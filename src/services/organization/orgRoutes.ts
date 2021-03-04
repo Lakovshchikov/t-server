@@ -2,7 +2,6 @@ import passport from 'passport';
 import { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import orgController from './orgController';
-import { TResponse } from './orgTypes';
 import { Organization } from './org';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
@@ -67,7 +66,7 @@ export default [
         method: 'post',
         handler: async (req: Request, res: Response) => {
             try {
-                const response:TResponse = await orgController.registerOrg(req.body);
+                const response: gt.TResponse = await orgController.registerOrg(req.body);
                 if (response.isSuccess) {
                     req.login(response.data, (err) => {
                         if (err) {

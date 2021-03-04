@@ -1,5 +1,5 @@
 import {
-    TResponse, TCommentReqData, TComment, TReqComment, TNNComment, TConfirmCommentReqData, TConfirmComment
+    TCommentReqData, TComment, TReqComment, TNNComment, TConfirmCommentReqData, TConfirmComment
 } from '@services/comment/commentTypes';
 import { DbProvider } from '@services/comment/providers/dbProvider';
 import OrgFacade from '@services/organization/facade/orgFacade';
@@ -13,12 +13,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { Db } from 'typeorm';
 
 class CommentController {
-    getCommentsByEventId = async (event_id: string): Promise<TResponse> => {
+    getCommentsByEventId = async (event_id: string): Promise<gt.TResponse> => {
         const response = await DbProvider.getCommentsByEventId(event_id);
         return response;
     };
 
-    predictComments = async (data: TCommentReqData): Promise<TResponse> => {
+    predictComments = async (data: TCommentReqData): Promise<gt.TResponse> => {
         try {
             const commentsData = plainToClass(PredictDataV, data);
             const errors:ValidationError[] = await Comment.validate(commentsData);
@@ -66,7 +66,7 @@ class CommentController {
         }
     };
 
-    confirmPrediction = async (data: TConfirmCommentReqData): Promise<TResponse> => {
+    confirmPrediction = async (data: TConfirmCommentReqData): Promise<gt.TResponse> => {
         try {
             let response;
             const commentsData = plainToClass(ConfirmDataV, data);
@@ -95,7 +95,7 @@ class CommentController {
 
     checkUser = (data: any): boolean => OrgFacade.checkType(data);
 
-    private getUniqueComments = async (data: TCommentReqData): Promise<TResponse> => {
+    private getUniqueComments = async (data: TCommentReqData): Promise<gt.TResponse> => {
         const response = await this.getCommentsByEventId(data.id_ev);
         if (response.isSuccess) {
             let unique: TComment[] = [];

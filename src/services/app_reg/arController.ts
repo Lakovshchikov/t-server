@@ -7,13 +7,12 @@ import UserFacade from '@services/user/facade/userFacade';
 import OrgFacade from '@services/organization/facade/orgFacade';
 import { EditAppRegDataV } from '@services/app_reg/validation/editAppRegDataV';
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
-import { TResponse } from './arTypes';
 
 class ArController {
-    createAppReg = async (data: AbstractAppRegDataV): Promise<TResponse> => {
+    createAppReg = async (data: AbstractAppRegDataV): Promise<gt.TResponse> => {
         const arData = plainToClass(NewAppRegDataV, data);
         const errors:ValidationError[] = await AppReg.validate(arData);
-        let response: TResponse;
+        let response: gt.TResponse;
         if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
@@ -22,10 +21,10 @@ class ArController {
         return response;
     };
 
-    editAppReg = async (data: AbstractAppRegDataV) : Promise<TResponse> => {
+    editAppReg = async (data: AbstractAppRegDataV) : Promise<gt.TResponse> => {
         const arData = plainToClass(EditAppRegDataV, data);
         const errors:ValidationError[] = await AppReg.validate(arData);
-        let response: TResponse;
+        let response: gt.TResponse;
         if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
@@ -34,7 +33,7 @@ class ArController {
         return response;
     };
 
-    getAppRegByOrgId = async (id: string) :Promise<TResponse> => {
+    getAppRegByOrgId = async (id: string) :Promise<gt.TResponse> => {
         const appReg = await DbProvider.getAppRegByOrgId(id);
         return appReg;
     };

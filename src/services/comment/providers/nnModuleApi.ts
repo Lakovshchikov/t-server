@@ -1,5 +1,5 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
-import { TResponse, TReqComment, TNNComment } from '@services/comment/commentTypes';
+import { TReqComment, TNNComment } from '@services/comment/commentTypes';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +8,7 @@ const baseUrl = `${process.env.NN_SERVER_PROTOCOL}://${
     process.env.NN_SERVER_HOST}:${process.env.NN_SERVER_PORT}`;
 
 export default abstract class NnModuleApi {
-    static async getPrediction(data: TReqComment[]): Promise<TResponse> {
+    static async getPrediction(data: TReqComment[]): Promise<gt.TResponse> {
         try {
             const opt: RequestInit = {
                 method: 'POST',
@@ -28,7 +28,7 @@ export default abstract class NnModuleApi {
         }
     }
 
-    private static sendError(message: string, e: any): TResponse {
+    private static sendError(message: string, e: any): gt.TResponse {
         return {
             isSuccess: false,
             error: {

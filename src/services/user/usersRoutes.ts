@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import path from 'path';
-import { TResponse } from '@services/user/userTypes';
 import usersController from './usersController';
 import { User } from './user';
 
@@ -49,7 +48,7 @@ export default [
         method: 'post',
         handler: async (req: Request, res: Response) => {
             try {
-                const response:TResponse = await usersController.registerUser(req.body);
+                const response: gt.TResponse = await usersController.registerUser(req.body);
                 if (response.isSuccess) {
                     req.login(response.data, (err) => {
                         if (err) {
@@ -86,7 +85,7 @@ export default [
             checkUserType,
             async (req: Request, res: Response) => {
                 const { user } = req;
-                const response: TResponse = await usersController.changeUserInfo({
+                const response: gt.TResponse = await usersController.changeUserInfo({
                     // @ts-ignore
                     ...req.body, email: user.email
                 });

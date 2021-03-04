@@ -2,7 +2,7 @@ import { Organization } from '@services/organization/org';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 import { DbProvider } from './providers/dbProvider';
-import { TOrgReqData, TResponse } from './orgTypes';
+import { TOrgReqData } from './orgTypes';
 import { NewOrgDataV } from './validation/newOrgDataV';
 import { EditOrgDataV } from './validation/editOrgDataV';
 import OrgFacade from './facade/orgFacade';
@@ -13,10 +13,10 @@ class OrgController {
         return user;
     };
 
-    registerOrg = async (data: TOrgReqData): Promise<TResponse> => {
+    registerOrg = async (data: TOrgReqData): Promise<gt.TResponse> => {
         const userData = plainToClass(NewOrgDataV, data);
         const errors:ValidationError[] = await Organization.validate(userData);
-        let response: TResponse;
+        let response: gt.TResponse;
         if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
@@ -41,10 +41,10 @@ class OrgController {
         return response;
     };
 
-    changeOrgInfo = async (data: TOrgReqData): Promise<TResponse> => {
+    changeOrgInfo = async (data: TOrgReqData): Promise<gt.TResponse> => {
         const userData = plainToClass(EditOrgDataV, data);
         const errors:ValidationError[] = await Organization.validate(userData);
-        let response: TResponse;
+        let response: gt.TResponse;
         if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
@@ -68,14 +68,13 @@ class OrgController {
         for (const errorItem of errors) {
             errorTexts = errorTexts.concat(errorItem.constraints);
         }
-        const response = {
+        return {
             isSuccess: false,
             error: {
                 message: 'Validation error',
                 data: errorTexts
             }
         };
-        return response;
     }
 }
 

@@ -1,5 +1,5 @@
 import { TAppRegReqData, EStatus } from '@services/app_reg/arTypes';
-import { IsDefined, IsString, IsInt } from 'class-validator';
+import { IsDefined, IsString } from 'class-validator';
 import { IsInEnum } from 'validation/dist';
 
 export abstract class AbstractAppRegDataV implements TAppRegReqData {

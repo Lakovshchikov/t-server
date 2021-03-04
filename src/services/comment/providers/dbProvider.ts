@@ -1,9 +1,9 @@
 import { Comment } from '@services/comment/comment';
-import { TNNComment, TResponse, TConfirmCommentReqData } from '@services/comment/commentTypes';
+import { TNNComment } from '@services/comment/commentTypes';
 import { getRepository } from 'typeorm';
 
 export abstract class DbProvider {
-    static getCommentsByIds = async (ids: string[]): Promise<TResponse> => {
+    static getCommentsByIds = async (ids: string[]): Promise<gt.TResponse> => {
         try {
             const commentRepository = await getRepository(Comment);
             const comments = await commentRepository
@@ -16,7 +16,7 @@ export abstract class DbProvider {
         }
     };
 
-    static getCommentsByEventId = async (event_id: string): Promise<TResponse> => {
+    static getCommentsByEventId = async (event_id: string): Promise<gt.TResponse> => {
         try {
             const commentRepository = await getRepository(Comment);
             const comments = await commentRepository
@@ -30,7 +30,7 @@ export abstract class DbProvider {
         }
     };
 
-    static saveComments = async (data: TNNComment | TNNComment[], id_ev: string) : Promise<TResponse> => {
+    static saveComments = async (data: TNNComment | TNNComment[], id_ev: string) : Promise<gt.TResponse> => {
         try {
             const commentRepository = await getRepository(Comment);
             const comments: Comment[] = [];
@@ -57,13 +57,13 @@ export abstract class DbProvider {
         }
     };
 
-    static updateComments = async (comments: Comment[]): Promise<TResponse> => {
+    static updateComments = async (comments: Comment[]): Promise<gt.TResponse> => {
         const commentRepository = await getRepository(Comment);
         await commentRepository.save(comments);
         return DbProvider.createResponse(comments);
     };
 
-    private static sendDBError(message: string, e: any): TResponse {
+    private static sendDBError(message: string, e: any): gt.TResponse {
         return {
             isSuccess: false,
             error: {
@@ -73,7 +73,7 @@ export abstract class DbProvider {
         };
     }
 
-    private static createResponse(data: any): TResponse {
+    private static createResponse(data: any): gt.TResponse {
         return {
             isSuccess: true,
             data: data

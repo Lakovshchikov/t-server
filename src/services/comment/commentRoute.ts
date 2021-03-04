@@ -1,6 +1,6 @@
 import { Comment } from '@services/comment/comment';
 import { NextFunction, Request, Response } from 'express';
-import { TResponse, TCommentReqData, IComment, TConfirmCommentReqData } from '@services/comment/commentTypes';
+import { TCommentReqData, IComment, TConfirmCommentReqData } from '@services/comment/commentTypes';
 import commentController from '@services/comment/commentController';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
@@ -49,7 +49,7 @@ export default [
             async (req: Request, res: Response) => {
                 try {
                     const data: TCommentReqData = req.body;
-                    const response: TResponse = await commentController.predictComments(data);
+                    const response: gt.TResponse = await commentController.predictComments(data);
                     if (response.isSuccess) {
                         const result = response.data.map((c:Comment) => c.serialize());
                         res.json(result);
@@ -70,7 +70,7 @@ export default [
             async (req: Request, res: Response) => {
                 try {
                     const data: TConfirmCommentReqData = req.body;
-                    const response: TResponse = await commentController.confirmPrediction(data);
+                    const response: gt.TResponse = await commentController.confirmPrediction(data);
                     if (response.isSuccess) {
                         const result = response.data.map((c:Comment) => c.serialize());
                         res.json(result);

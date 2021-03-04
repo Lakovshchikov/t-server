@@ -1,10 +1,9 @@
 import arController from '@services/app_reg/arController';
 import { TAppRegReqData } from '@services/app_reg/arTypes';
 import { Organization } from '@services/organization/org';
-import { TResponse } from '@services/organization/orgTypes';
 
 class OrgFacade {
-    static async createAppReg(data: TAppRegReqData):Promise<TResponse> {
+    static async createAppReg(data: TAppRegReqData):Promise<gt.TResponse> {
         return arController.createAppReg(data);
     }
 

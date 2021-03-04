@@ -1,6 +1,6 @@
 import { DbProvider } from '@services/user/providers/dbProvider';
 import { User } from '@services/user/user';
-import { TUserReqData, TResponse } from '@services/user/userTypes';
+import { TUserReqData } from '@services/user/userTypes';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 import { UserDataV } from './validation/userDataV';
@@ -12,10 +12,10 @@ class UserController {
         return user;
     };
 
-    registerUser = async (data: TUserReqData): Promise<TResponse> => {
+    registerUser = async (data: TUserReqData): Promise<gt.TResponse> => {
         const userData = plainToClass(NewUserDataV, data);
         const errors:ValidationError[] = await User.validate(userData);
-        let response: TResponse;
+        let response: gt.TResponse;
         if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
@@ -34,10 +34,10 @@ class UserController {
         return response;
     };
 
-    changeUserInfo = async (data: TUserReqData): Promise<TResponse> => {
+    changeUserInfo = async (data: TUserReqData): Promise<gt.TResponse> => {
         const userData = plainToClass(UserDataV, data);
         const errors:ValidationError[] = await User.validate(userData);
-        let response: TResponse;
+        let response: gt.TResponse;
         if (errors.length) {
             response = this.sendValidationError(errors);
         } else {
