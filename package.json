@@ -51,7 +51,8 @@
     "tsc-watch": "^4.2.9",
     "typeorm": "0.2.28",
     "uuid": "^8.3.2",
-    "validation": "file:local_packages/validation"
+    "validation": "file:local_packages/validation",
+    "setters": "file:local_packages/setters"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
