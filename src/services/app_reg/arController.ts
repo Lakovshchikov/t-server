@@ -14,7 +14,7 @@ class ArController {
         const errors:ValidationError[] = await AppReg.validate(arData);
         let response: gt.TResponse;
         if (errors.length) {
-            response = this.sendValidationError(errors);
+            response = ArController.sendValidationError(errors);
         } else {
             response = await DbProvider.createAppReg(data);
         }
@@ -26,7 +26,7 @@ class ArController {
         const errors:ValidationError[] = await AppReg.validate(arData);
         let response: gt.TResponse;
         if (errors.length) {
-            response = this.sendValidationError(errors);
+            response = ArController.sendValidationError(errors);
         } else {
             response = await DbProvider.editAppReg(data);
         }
@@ -44,19 +44,22 @@ class ArController {
 
     checkOrg = (data:any): boolean => OrgFacade.checkType(data);
 
-    private sendValidationError(errors:ValidationError[]) {
+    private static sendValidationError(errors:ValidationError[]) {
         let errorTexts: any[] = [];
         for (const errorItem of errors) {
             errorTexts = errorTexts.concat(errorItem.constraints);
         }
-        const response = {
+        return ArController.sendError({
+            message: 'Validation error',
+            data: errorTexts
+        });
+    }
+
+    private static sendError(error: any) {
+        return {
             isSuccess: false,
-            error: {
-                message: 'Validation error',
-                data: errorTexts
-            }
+            error: error
         };
-        return response;
     }
 }
 

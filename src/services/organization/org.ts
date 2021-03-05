@@ -5,6 +5,7 @@ import { Event } from '@services/event/event';
 import { AppReg } from '@services/app_reg/app_reg';
 import crypto from 'crypto';
 import { validate, ValidationError } from 'class-validator';
+import { setDefaultValue } from 'setters/dist';
 import {
     IOrganization, EOrgForm, ETaxSystem, EReason, ECountry,
     TOrgReqData
@@ -99,33 +100,21 @@ export class Organization implements IOrganization {
     setProperties = (data: TOrgReqData | null) => {
         this.email = data.email;
         this.pass = data.pass ? Organization.getHashPass(data.pass) : this.pass;
-        this.name = this.setVal(data.name, this.name);
-        this.org_form = this.setVal(data.org_form, this.org_form);
-        this.address = this.setVal(data.address, this.address);
-        this.reg_num = this.setVal(data.reg_num, this.reg_num);
-        this.taxpayer_id = this.setVal(data.taxpayer_id, this.taxpayer_id);
-        this.kpp = this.setNull(data.kpp, this.kpp);
+        this.name = setDefaultValue(data.name, this.name);
+        this.org_form = setDefaultValue(data.org_form, this.org_form);
+        this.address = setDefaultValue(data.address, this.address);
+        this.reg_num = setDefaultValue(data.reg_num, this.reg_num);
+        this.taxpayer_id = setDefaultValue(data.taxpayer_id, this.taxpayer_id);
+        this.kpp = setDefaultValue(data.kpp, this.kpp);
         this.country = ECountry.RUSSIA;
-        this.tax_system = this.setVal(data.tax_system, this.tax_system);
-        this.vat_ticket = this.setNull(data.vat_ticket, this.vat_ticket);
-        this.bank_id = this.setVal(data.bank_id, this.bank_id);
-        this.checking_acс = this.setVal(data.checking_acс, this.checking_acс);
-        this.corresp_acc = this.setVal(data.corresp_acc, this.corresp_acc);
-        this.fio_sign = this.setVal(data.fio_sign, this.fio_sign);
-        this.bank_name = this.setVal(data.bank_name, this.bank_name);
-        this.position = this.setVal(data.position, this.position);
-        this.reason = this.setVal(data.reason, this.reason);
-    };
-
-    private setVal = (value: any, currentVal: any) => value || currentVal;
-
-    private setNull = (value: any, currentVal: any | null) => {
-        let result;
-        if (value) {
-            result = value;
-        } else {
-            result = currentVal !== undefined ? currentVal : null;
-        }
-        return result;
+        this.tax_system = setDefaultValue(data.tax_system, this.tax_system);
+        this.vat_ticket = setDefaultValue(data.vat_ticket, this.vat_ticket, null);
+        this.bank_id = setDefaultValue(data.bank_id, this.bank_id);
+        this.checking_acс = setDefaultValue(data.checking_acс, this.checking_acс);
+        this.corresp_acc = setDefaultValue(data.corresp_acc, this.corresp_acc);
+        this.fio_sign = setDefaultValue(data.fio_sign, this.fio_sign);
+        this.bank_name = setDefaultValue(data.bank_name, this.bank_name);
+        this.position = setDefaultValue(data.position, this.position);
+        this.reason = setDefaultValue(data.reason, this.reason);
     };
 }

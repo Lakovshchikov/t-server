@@ -17,16 +17,13 @@ class UserController {
         const errors:ValidationError[] = await User.validate(userData);
         let response: gt.TResponse;
         if (errors.length) {
-            response = this.sendValidationError(errors);
+            response = UserController.sendValidationError(errors);
         } else {
             const user = await this.getUserByEmail(data.email);
             if (user) {
-                response = {
-                    isSuccess: false,
-                    error: {
-                        message: 'User with this email is already registered'
-                    }
-                };
+                response = UserController.sendError({
+                    message: 'User with this email is already registered'
+                });
             } else {
                 response = await DbProvider.createUser(userData);
             }
@@ -39,36 +36,36 @@ class UserController {
         const errors:ValidationError[] = await User.validate(userData);
         let response: gt.TResponse;
         if (errors.length) {
-            response = this.sendValidationError(errors);
+            response = UserController.sendValidationError(errors);
         } else {
             const user = await this.getUserByEmail(data.email);
             if (user) {
                 response = await DbProvider.updateUser(userData);
             } else {
-                response = {
-                    isSuccess: false,
-                    error: {
-                        message: 'User with this email does not exist'
-                    }
-                };
+                response = UserController.sendError({
+                    message: 'User with this email does not exist'
+                });
             }
         }
         return response;
     };
 
-    private sendValidationError(errors:ValidationError[]) {
+    private static sendValidationError(errors:ValidationError[]) {
         let errorTexts: any[] = [];
         for (const errorItem of errors) {
             errorTexts = errorTexts.concat(errorItem.constraints);
         }
-        const response = {
+        return UserController.sendError({
+            message: 'Validation error',
+            data: errorTexts
+        });
+    }
+
+    private static sendError(error: any) {
+        return {
             isSuccess: false,
-            error: {
-                message: 'Validation error',
-                data: errorTexts
-            }
+            error: error
         };
-        return response;
     }
 }
 

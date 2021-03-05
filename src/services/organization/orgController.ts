@@ -18,16 +18,13 @@ class OrgController {
         const errors:ValidationError[] = await Organization.validate(userData);
         let response: gt.TResponse;
         if (errors.length) {
-            response = this.sendValidationError(errors);
+            response = OrgController.sendValidationError(errors);
         } else {
             const org = await this.getUserByEmail(data.email);
             if (org) {
-                response = {
-                    isSuccess: false,
-                    error: {
-                        message: 'Organization with this email is already registered'
-                    }
-                };
+                OrgController.sendError({
+                    message: 'Organization with this email is already registered'
+                });
             } else {
                 response = await DbProvider.createUser(userData);
                 const responseAr = await OrgFacade.createAppReg({
@@ -46,34 +43,35 @@ class OrgController {
         const errors:ValidationError[] = await Organization.validate(userData);
         let response: gt.TResponse;
         if (errors.length) {
-            response = this.sendValidationError(errors);
+            response = OrgController.sendValidationError(errors);
         } else {
             const org = await this.getUserByEmail(data.email);
             if (org) {
                 response = await DbProvider.updateUser(userData);
             } else {
-                response = {
-                    isSuccess: false,
-                    error: {
-                        message: 'Organization with this email does not exist'
-                    }
-                };
+                OrgController.sendError({
+                    message: 'Organization with this email does not exist'
+                });
             }
         }
         return response;
     };
 
-    private sendValidationError(errors:ValidationError[]) {
+    private static sendValidationError(errors:ValidationError[]) {
         let errorTexts: any[] = [];
         for (const errorItem of errors) {
             errorTexts = errorTexts.concat(errorItem.constraints);
         }
+        return OrgController.sendError({
+            message: 'Validation error',
+            data: errorTexts
+        });
+    }
+
+    private static sendError(error: any) {
         return {
             isSuccess: false,
-            error: {
-                message: 'Validation error',
-                data: errorTexts
-            }
+            error: error
         };
     }
 }

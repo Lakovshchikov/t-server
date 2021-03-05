@@ -4,6 +4,8 @@ import {
 import { Event } from '@services/event/event';
 import { IComment, TInfo, TCommentReqData, TConfirmCommentReqData } from '@services/comment/commentTypes';
 import { validate, ValidationError } from 'class-validator';
+import { setDefaultValue } from 'setters/dist';
+import { Exclude, classToPlain } from 'class-transformer';
 
 @Entity({ name: 'comment' })
 export class Comment implements IComment {
@@ -11,6 +13,7 @@ export class Comment implements IComment {
         if (data) this.setProperties(data);
     }
 
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
     static validate = function (data: TCommentReqData | TConfirmCommentReqData): Promise<ValidationError[]> {
         return validate(data, { skipMissingProperties: true })
             .then((errors: ValidationError[]) => errors);
@@ -33,37 +36,18 @@ export class Comment implements IComment {
 
     @ManyToOne(() => Event, event => event.comments)
     @JoinColumn({ name: 'id_ev', referencedColumnName: 'id' })
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
     event: Event;
 
-    public serialize = (stringify: boolean = false) :IComment | string => {
-        let result: IComment | string;
-        const obj = {
-            id: this.id,
-            id_ev: this.id_ev,
-            info: this.info,
-            content: this.content,
-            correct: this.correct
-        };
-        result = obj;
-        if (stringify) result = JSON.stringify(obj);
-        return result;
-    };
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
+    serialize = (): Record<string, any> => classToPlain(this);
 
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
     public setProperties(data: IComment) {
         this.id = data.id;
         this.id_ev = data.id_ev;
         this.info = data.info;
         this.content = data.content;
-        this.correct = this.setNull(data.correct, this.correct);
+        this.correct = setDefaultValue(data.correct, this.correct, null);
     }
-
-    private setNull = (value: any, currentVal: any | null) => {
-        let result;
-        if (value) {
-            result = value;
-        } else {
-            result = currentVal !== undefined ? currentVal : null;
-        }
-        return result;
-    };
 }

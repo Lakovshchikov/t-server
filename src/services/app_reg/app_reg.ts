@@ -3,6 +3,8 @@ import {
 } from 'typeorm';
 import { Organization } from '@services/organization/org';
 import { validate, ValidationError } from 'class-validator';
+import { setDefaultValue } from 'setters/dist';
+import { Exclude, classToPlain } from 'class-transformer';
 import { IAppOrg, EStatus, TAppRegReqData } from './arTypes';
 
 @Entity({ name: 'app_reg' })
@@ -11,6 +13,7 @@ export class AppReg implements IAppOrg {
         if (data) this.setProperties(data);
     }
 
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
     static validate = function (data: TAppRegReqData) : Promise<ValidationError[]> {
         return validate(data, { skipMissingProperties: true })
             .then((errors: ValidationError[]) => errors);
@@ -35,34 +38,14 @@ export class AppReg implements IAppOrg {
     @JoinColumn({ name: 'id', referencedColumnName: 'id' })
     org: Organization;
 
-    public serialize = (stringify: boolean = false) :IAppOrg | string => {
-        let result: IAppOrg | string;
-        const obj = {
-            id: this.id,
-            id_org: this.id_org,
-            status: this.status,
-            desc: this.desc,
-            doc_id: this.doc_id
-        };
-        result = obj;
-        if (stringify) result = JSON.stringify(obj);
-        return result;
-    };
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
+    serialize = (): Record<string, any> => classToPlain(this);
 
+    @Exclude({ toPlainOnly: false, toClassOnly: false })
     public setProperties(data: TAppRegReqData | null) {
-        this.id_org = this.setNull(data.id_org, this.id_org);
-        this.doc_id = this.setNull(data.doc_id, this.doc_id);
-        this.status = this.setNull(data.status, EStatus.PROCESSING);
-        this.desc = this.setNull(data.desc, this.desc);
+        this.id_org = setDefaultValue(data.id_org, this.id_org, null);
+        this.doc_id = setDefaultValue(data.doc_id, this.doc_id, null);
+        this.status = setDefaultValue(data.status, EStatus.PROCESSING, null);
+        this.desc = setDefaultValue(data.desc, this.desc, null);
     }
-
-    private setNull = (value: any, currentVal: any | null) => {
-        let result;
-        if (value) {
-            result = value;
-        } else {
-            result = currentVal !== undefined ? currentVal : null;
-        }
-        return result;
-    };
 }

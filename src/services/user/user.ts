@@ -4,6 +4,7 @@ import {
 import { Ticket } from '@services/ticket/ticket';
 import { TConfigNotification, TConfigPermission, TUserReqData, IUser } from '@services/user/userTypes';
 import { validate, ValidationError } from 'class-validator';
+import { setDefaultValue } from 'setters/dist';
 
 import crypto from 'crypto';
 import dotenv from 'dotenv';
@@ -82,39 +83,19 @@ export class User implements IUser {
         this.pass = data.pass ? User.getHashPass(data.pass) : this.pass;
         this.name = data.name ? data.name : this.name;
         this.second_name = data.second_name ? data.second_name : this.second_name;
-        this.part_name = this.setNull(data.part_name, this.part_name);
-        this.phone = this.setNull(data.phone, this.phone);
+        this.part_name = setDefaultValue(data.part_name, this.part_name, null);
+        this.phone = setDefaultValue(data.phone, this.phone, null);
         this.isAdmin = false;
         this.temp_pass = false;
         this.config_notification = {
-            browser: this.setBool(data.n_browser, this.config_notification?.browser),
-            email: this.setBool(data.n_email, this.config_notification?.email),
-            phone: this.setBool(data.n_phone, this.config_notification?.phone),
-            tg: this.setBool(data.n_tg, this.config_notification?.tg)
+            browser: setDefaultValue(data.n_browser, this.config_notification?.browser, false),
+            email: setDefaultValue(data.n_email, this.config_notification?.email, false),
+            phone: setDefaultValue(data.n_phone, this.config_notification?.phone, false),
+            tg: setDefaultValue(data.n_tg, this.config_notification?.tg, false)
         };
         this.config_permission = {
-            email: this.setBool(data.p_email, this.config_permission?.email),
-            phone: this.setBool(data.p_phone, this.config_permission?.phone)
+            email: setDefaultValue(data.p_email, this.config_permission?.email, false),
+            phone: setDefaultValue(data.p_phone, this.config_permission?.phone, false)
         };
-    };
-
-    private setNull = (value: any, currentVal: any | null) => {
-        let result;
-        if (value) {
-            result = value;
-        } else {
-            result = currentVal !== undefined ? currentVal : null;
-        }
-        return result;
-    };
-
-    private setBool = (value: any, currentVal: any | null) => {
-        let result;
-        if (value) {
-            result = value;
-        } else {
-            result = currentVal !== undefined ? currentVal : false;
-        }
-        return result;
     };
 }

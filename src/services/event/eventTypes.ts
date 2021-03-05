@@ -12,6 +12,10 @@ export interface IEvent {
     category: number;
 
     public: boolean;
+
+    setProperties: (data: TEventData) => void,
+
+    serialize: () => Record<string, any>
 }
 
 export type TEventData = {

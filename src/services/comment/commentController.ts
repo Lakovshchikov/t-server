@@ -10,7 +10,6 @@ import { ValidationError } from 'class-validator';
 import { PredictDataV } from '@services/comment/validation/predictDataV';
 import { ConfirmDataV } from '@services/comment/validation/confirmDataV';
 import { v4 as uuidv4 } from 'uuid';
-import { Db } from 'typeorm';
 
 class CommentController {
     getCommentsByEventId = async (event_id: string): Promise<gt.TResponse> => {
@@ -24,7 +23,7 @@ class CommentController {
             const errors:ValidationError[] = await Comment.validate(commentsData);
             let response;
             if (errors.length) {
-                response = this.sendValidationError(errors);
+                response = CommentController.sendValidationError(errors);
             } else {
                 response = await this.getUniqueComments(data);
                 if (response.isSuccess) {
@@ -59,10 +58,7 @@ class CommentController {
             }
             return response;
         } catch (e) {
-            return {
-                isSuccess: false,
-                error: e
-            };
+            return CommentController.sendError(e);
         }
     };
 
@@ -72,7 +68,7 @@ class CommentController {
             const commentsData = plainToClass(ConfirmDataV, data);
             const errors:ValidationError[] = await Comment.validate(commentsData);
             if (errors.length > 0) {
-                response = this.sendValidationError(errors);
+                response = CommentController.sendValidationError(errors);
             } else {
                 const ids = data.comments.map((c: TConfirmComment) => c.id);
                 response = await DbProvider.getCommentsByIds(ids);
@@ -86,10 +82,7 @@ class CommentController {
             }
             return response;
         } catch (e) {
-            return {
-                isSuccess: false,
-                error: e
-            };
+            return CommentController.sendError(e);
         }
     };
 
@@ -135,17 +128,22 @@ class CommentController {
         return errorTexts;
     };
 
-    private sendValidationError(errors:ValidationError[]) {
+    private static sendValidationError(errors:ValidationError[]) {
         let errorTexts: any[] = [];
-        errorTexts = this.getValidationErrors(errors, errorTexts);
-        const response = {
+        for (const errorItem of errors) {
+            errorTexts = errorTexts.concat(errorItem.constraints);
+        }
+        return CommentController.sendError({
+            message: 'Validation error',
+            data: errorTexts
+        });
+    }
+
+    private static sendError(error: any) {
+        return {
             isSuccess: false,
-            error: {
-                message: 'Validation error',
-                data: errorTexts
-            }
+            error: error
         };
-        return response;
     }
 }
 

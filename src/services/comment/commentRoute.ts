@@ -8,7 +8,7 @@ const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     if (commentController.checkUser(user)) {
         next();
     } else {
-        res.redirect(401, '/login');
+        res.redirect(401, '/org/login');
         // res.status(401).location('/login').end();
     }
 };
@@ -27,7 +27,7 @@ export default [
                     const response = await commentController.getCommentsByEventId(id.toString());
                     if (response.isSuccess) {
                         const comments: Comment[] = response.data;
-                        const result: (string | IComment)[] = [];
+                        const result: (Record<string, any>)[] = [];
                         comments.forEach((c: Comment) => {
                             result.push(c.serialize());
                         });

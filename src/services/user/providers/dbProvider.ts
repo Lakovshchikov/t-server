@@ -8,7 +8,7 @@ export abstract class DbProvider {
         const userRepository = await getRepository(User);
         const user = await userRepository
             .createQueryBuilder('user')
-            .where('user.email = :email', { email: email })
+            .where('user.email = :email', { email })
             .getOne();
 
         return user;

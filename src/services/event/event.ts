@@ -81,5 +81,5 @@ export class Event implements IEvent {
     };
 
     @Exclude({ toPlainOnly: false, toClassOnly: false })
-    serialize = (stringify: boolean = false): Record<string, any> => classToPlain(this);
+    serialize = (): Record<string, any> => classToPlain(this);
 }

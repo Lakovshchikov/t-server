@@ -13,16 +13,13 @@ class EventController {
             const errors:ValidationError[] = await Event.validate(eventData);
             let response: gt.TResponse;
             if (errors.length) {
-                response = this.sendValidationError(errors);
+                response = EventController.sendValidationError(errors);
             } else {
                 response = await DbProvider.createEvent(data);
             }
             return response;
         } catch (e) {
-            return {
-                isSuccess: false,
-                data: e
-            };
+            return EventController.sendError(e);
         }
     };
 
@@ -32,37 +29,37 @@ class EventController {
             const errors:ValidationError[] = await Event.validate(eventData);
             let response: gt.TResponse;
             if (errors.length) {
-                response = this.sendValidationError(errors);
+                response = EventController.sendValidationError(errors);
             } else {
                 response = await DbProvider.getEventById(data.id);
                 if (response.isSuccess) {
-                    const event = response.data as Event;
+                    const event = response.data as IEvent;
                     event.setProperties(data);
                     response = await DbProvider.updateEvent(event);
                 }
             }
             return response;
         } catch (e) {
-            return {
-                isSuccess: false,
-                data: e
-            };
+            return EventController.sendError(e);
         }
     };
 
-    private sendValidationError(errors:ValidationError[]) {
+    private static sendValidationError(errors:ValidationError[]) {
         let errorTexts: any[] = [];
         for (const errorItem of errors) {
             errorTexts = errorTexts.concat(errorItem.constraints);
         }
-        const response = {
+        return EventController.sendError({
+            message: 'Validation error',
+            data: errorTexts
+        });
+    }
+
+    private static sendError(error: any) {
+        return {
             isSuccess: false,
-            error: {
-                message: 'Validation error',
-                data: errorTexts
-            }
+            error: error
         };
-        return response;
     }
 
     checkUser = (data: any): boolean => OrgFacade.checkType(data);
