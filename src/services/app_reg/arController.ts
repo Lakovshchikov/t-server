@@ -9,13 +9,14 @@ import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppReg
 import validate from '@services/app_reg/validation';
 import { IAppOrg } from '@services/app_reg/arTypes';
 import createHttpError from 'http-errors';
+import { getValidationErrors } from 'validation/dist';
 
 class ArController {
     createAppReg = async (data: AbstractAppRegDataV): Promise<IAppOrg> => {
         const arData = plainToClass(NewAppRegDataV, data);
         const errors:ValidationError[] = await validate(arData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         const appReg = await DbProvider.createAppReg(data);
         return appReg;
@@ -25,7 +26,7 @@ class ArController {
         const arData = plainToClass(EditAppRegDataV, data);
         const errors:ValidationError[] = await validate(arData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         const appReg = await DbProvider.editAppReg(data);
         return appReg;

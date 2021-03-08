@@ -1,6 +1,7 @@
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 import createHttpError from 'http-errors';
+import { getValidationErrors } from 'validation/dist';
 import { DbProvider } from './providers/dbProvider';
 import { TOrgReqData, IOrganization } from './orgTypes';
 import { NewOrgDataV } from './validation/newOrgDataV';
@@ -22,7 +23,7 @@ class OrgController {
         const userData = plainToClass(NewOrgDataV, data);
         const errors:ValidationError[] = await validate(userData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         let org = await this.getUserByEmail(data.email);
         if (org) {
@@ -40,7 +41,7 @@ class OrgController {
         const userData = plainToClass(EditOrgDataV, data);
         const errors:ValidationError[] = await validate(userData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         let org = await this.getUserByEmail(data.email);
         if (org) {

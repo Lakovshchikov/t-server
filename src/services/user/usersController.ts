@@ -3,6 +3,7 @@ import { TUserReqData, IUser } from '@services/user/userTypes';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 import createHttpError from 'http-errors';
+import { getValidationErrors } from 'validation/dist';
 import { UserDataV } from './validation/userDataV';
 import { NewUserDataV } from './validation/newUserDataV';
 import validate from './validation';
@@ -18,7 +19,7 @@ class UserController {
             const userData = plainToClass(NewUserDataV, data);
             const errors:ValidationError[] = await validate(userData);
             if (errors.length) {
-                throw createHttpError(400, 'Validation errors', errors);
+                throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
             }
             let user = await this.getUserByEmail(data.email);
             if (user) {
@@ -37,7 +38,7 @@ class UserController {
             const userData = plainToClass(UserDataV, data);
             const errors:ValidationError[] = await validate(userData);
             if (errors.length) {
-                throw createHttpError(400, 'Validation errors', errors);
+                throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
             }
             let user = await this.getUserByEmail(data.email);
             if (user) {

@@ -6,6 +6,7 @@ import createHttpError from 'http-errors';
 import { TDateData, IEventDate } from '@services/date/dateTypes';
 import validate, { NewDateV, EditDateV } from '@services/date/validation/';
 import EventFacade from '@services/event/facade';
+import { getValidationErrors } from 'validation/dist';
 
 class DateController {
     createDate = async (data: TDateData): Promise<IEventDate> => {
@@ -13,7 +14,7 @@ class DateController {
             const dateData = plainToClass(NewDateV, data);
             const errors:ValidationError[] = await validate(dateData);
             if (errors.length) {
-                throw createHttpError(400, 'Validation errors', errors);
+                throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
             }
             const date = await DbProvider.createDate(dateData);
             return date;
@@ -27,7 +28,7 @@ class DateController {
             const dateData = plainToClass(EditDateV, data);
             const errors:ValidationError[] = await validate(dateData);
             if (errors.length) {
-                throw createHttpError(400, 'Validation errors', errors);
+                throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
             }
             const date = await DbProvider.getDateById(data.id);
             if (date) {

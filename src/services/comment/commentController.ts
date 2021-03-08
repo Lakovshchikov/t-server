@@ -10,6 +10,7 @@ import { PredictDataV } from '@services/comment/validation/predictDataV';
 import { ConfirmDataV } from '@services/comment/validation/confirmDataV';
 import { v4 as uuidv4 } from 'uuid';
 import createHttpError from 'http-errors';
+import { getValidationErrors } from 'validation/dist';
 import validate from './validation';
 
 type UComments = {
@@ -27,7 +28,7 @@ class CommentController {
         const commentsData = plainToClass(PredictDataV, data);
         const errors:ValidationError[] = await validate(commentsData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         const uComments: UComments = await this.getUniqueComments(data);
         let prediction: IComment[] = uComments.notUnique;
@@ -52,7 +53,7 @@ class CommentController {
         const commentsData = plainToClass(ConfirmDataV, data);
         const errors:ValidationError[] = await validate(commentsData);
         if (errors.length > 0) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         const ids = data.comments.map((c: TConfirmComment) => c.id);
         let comments = await DbProvider.getCommentsByIds(ids);
@@ -90,18 +91,6 @@ class CommentController {
         } catch (e) {
             throw createHttpError(500, 'getUniqueComments error', e);
         }
-    };
-
-    private getValidationErrors = (errors:ValidationError[], _errorTexts: any[]): any => {
-        let errorTexts = [].concat(_errorTexts);
-        for (const errorItem of errors) {
-            if (errorItem.children.length) {
-                errorTexts = this.getValidationErrors(errorItem.children, errorTexts);
-            } else {
-                errorTexts = errorTexts.concat(errorItem.constraints);
-            }
-        }
-        return errorTexts;
     };
 }
 

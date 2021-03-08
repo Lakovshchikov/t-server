@@ -4,6 +4,7 @@ import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 import OrgFacade from '@services/organization/facade/orgFacade';
 import createHttpError from 'http-errors';
+import { getValidationErrors } from 'validation/dist';
 import validate, { NewEventDataV, UpdateEventDataV } from './validation';
 
 class EventController {
@@ -11,7 +12,7 @@ class EventController {
         const eventData = plainToClass(NewEventDataV, data);
         const errors:ValidationError[] = await validate(eventData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         const event = await DbProvider.createEvent(data);
         return event;
@@ -21,7 +22,7 @@ class EventController {
         const eventData = plainToClass(UpdateEventDataV, data);
         const errors:ValidationError[] = await validate(eventData);
         if (errors.length) {
-            throw createHttpError(400, 'Validation errors', errors);
+            throw createHttpError(400, 'Validation errors', getValidationErrors(errors));
         }
         let event = await DbProvider.getEventById(data.id);
         if (event) {
