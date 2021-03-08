@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
+import {registerDecorator, ValidationArguments, ValidationError, ValidationOptions} from 'class-validator';
 
 export function IsInEnum(property: any, validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
@@ -16,4 +16,16 @@ export function IsInEnum(property: any, validationOptions?: ValidationOptions) {
             }
         });
     };
+}
+
+export function getValidationErrors(errors:ValidationError[], _errorTexts: any[] = []): any {
+    let errorTexts = [].concat(_errorTexts);
+    for (const errorItem of errors) {
+        if (errorItem.children.length) {
+            errorTexts = getValidationErrors(errorItem.children, errorTexts);
+        } else {
+            errorTexts = errorTexts.concat(errorItem.constraints);
+        }
+    }
+    return errorTexts;
 }
