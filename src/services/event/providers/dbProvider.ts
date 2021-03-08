@@ -10,6 +10,7 @@ export abstract class DbProvider {
             const event = await eventsRepository
                 .createQueryBuilder('event')
                 .where('event.id = :id', { id })
+                .leftJoinAndSelect('event.org', 'organization')
                 .getOne();
 
             if (event === undefined) {

@@ -34,7 +34,7 @@ export class EventDate implements IEventDate {
     date: string;
 
     @ManyToOne(() => Event, event => event.dates)
-    @JoinColumn({ name: 'id' })
+    @JoinColumn({ name: 'id_ev' })
     @Exclude()
     event: Event;
 

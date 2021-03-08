@@ -1,4 +1,3 @@
-import { Comment } from '@services/comment/comment';
 import { NextFunction, Request, Response } from 'express';
 import { TCommentReqData, IComment, TConfirmCommentReqData } from '@services/comment/commentTypes';
 import commentController from '@services/comment/commentController';
@@ -27,7 +26,7 @@ export default [
                 const comments = await commentController.getCommentsByEventId(id.toString());
                 if (comments.length) {
                     const result: (Record<string, any>)[] = [];
-                    comments.forEach((c: Comment) => {
+                    comments.forEach((c: IComment) => {
                         result.push(c.serialize());
                     });
                     res.json(result);
@@ -47,7 +46,7 @@ export default [
                 const data: TCommentReqData = req.body;
                 const comments = await commentController.predictComments(data);
                 if (comments) {
-                    const result = comments.map((c:Comment) => c.serialize());
+                    const result = comments.map((c:IComment) => c.serialize());
                     res.json(result);
                 } else {
                     throw createHttpError(500, 'Predict comments error');
@@ -64,7 +63,7 @@ export default [
                 const data: TConfirmCommentReqData = req.body;
                 const comments = await commentController.confirmPrediction(data);
                 if (comments) {
-                    const result = comments.map((c:Comment) => c.serialize());
+                    const result = comments.map((c:IComment) => c.serialize());
                     res.json(result);
                 } else {
                     throw createHttpError(500, 'Predict comments error');

@@ -9,6 +9,8 @@ export abstract class DbProvider {
         const date = await dateRepository
             .createQueryBuilder('date')
             .where('date.id = :id', { id })
+            .leftJoinAndSelect('date.event', 'event')
+            .leftJoinAndSelect('event.org', 'organization')
             .getOne();
 
         return date;

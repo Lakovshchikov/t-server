@@ -15,8 +15,11 @@ export type TConfirmCommentReqData = {
     comments: TConfirmComment[]
 };
 
-export interface IComment {
+export interface IComment extends TCommentDate{
+    serialize: () => Record<string, any>
+}
 
+export type TCommentDate = {
     id: string;
 
     id_ev: string;
@@ -26,7 +29,7 @@ export interface IComment {
     content: string;
 
     correct?: boolean | null;
-}
+};
 
 export type TComment = {
     content: string

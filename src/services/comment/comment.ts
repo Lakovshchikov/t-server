@@ -2,13 +2,13 @@ import {
     Entity, Column, JoinColumn, PrimaryGeneratedColumn, ManyToOne
 } from 'typeorm';
 import { Event } from '@services/event/event';
-import { IComment, TInfo } from '@services/comment/commentTypes';
+import { IComment, TInfo, TCommentDate } from '@services/comment/commentTypes';
 import { setDefaultValue } from 'setters/dist';
 import { Exclude, classToPlain } from 'class-transformer';
 
 @Entity({ name: 'comment' })
 export class Comment implements IComment {
-    constructor(data: IComment) {
+    constructor(data: TCommentDate) {
         if (data) this.setProperties(data);
     }
 
@@ -36,7 +36,7 @@ export class Comment implements IComment {
     serialize = (): Record<string, any> => classToPlain(this);
 
     @Exclude({ toPlainOnly: false, toClassOnly: false })
-    public setProperties(data: IComment) {
+    public setProperties(data: TCommentDate) {
         this.id = data.id;
         this.id_ev = data.id_ev;
         this.info = data.info;
