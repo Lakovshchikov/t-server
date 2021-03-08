@@ -5,7 +5,7 @@ import { Organization } from '@services/organization/org';
 import { AppEdit } from '@services/app_edit/appEdit';
 import { Comment } from '@services/comment/comment';
 import { Component } from '@services/component/component';
-import { Date } from '@services/date/date';
+import { EventDate } from '@services/date/date';
 import { IEvent, TEventData } from '@services/event/eventTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { validate, ValidationError } from 'class-validator';
@@ -64,7 +64,7 @@ export class Event implements IEvent {
     @Exclude({ toPlainOnly: false, toClassOnly: false })
     components: Component[];
 
-    @OneToMany(() => Date, date => date.event)
+    @OneToMany(() => EventDate, date => date.event)
     @JoinColumn({ name: 'id' })
     @Exclude({ toPlainOnly: false, toClassOnly: false })
     dates: Date[];

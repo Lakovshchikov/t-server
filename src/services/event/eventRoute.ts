@@ -1,4 +1,3 @@
-import { Event } from '@services/event/event';
 import { NextFunction, Request, Response } from 'express';
 import { IEvent, TEventData } from '@services/event/eventTypes';
 import eventController from '@services/event/eventController';
@@ -36,7 +35,7 @@ export default [
                     const data: TEventData = req.body;
                     const response = await eventController.createEvent(data);
                     if (response.isSuccess) {
-                        const event = response.data as Event;
+                        const event = response.data as IEvent;
                         res.json(event.serialize());
                     } else {
                         res.status(409).send(response.error);
@@ -59,7 +58,7 @@ export default [
                     const data: TEventData = req.body;
                     const response: gt.TResponse = await eventController.updateEvent(data);
                     if (response.isSuccess) {
-                        const event = response.data as Event;
+                        const event = response.data as IEvent;
                         res.json(event.serialize());
                     } else {
                         res.status(409).send(response.error);

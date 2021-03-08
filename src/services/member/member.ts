@@ -1,7 +1,7 @@
 import {
     Entity, Column, JoinColumn, PrimaryColumn, ManyToOne
 } from 'typeorm';
-import { Date } from '@services/date/date';
+import { EventDate } from '@services/date/date';
 
 @Entity({ name: 'member' })
 export class Member {
@@ -14,7 +14,7 @@ export class Member {
     @Column({ type: 'smallint' })
     type: number;
 
-    @ManyToOne(() => Date, date => date.members)
+    @ManyToOne(() => EventDate, date => date.members)
     @JoinColumn({ name: 'id' })
     date: Date;
 }

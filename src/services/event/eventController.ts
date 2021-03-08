@@ -4,6 +4,7 @@ import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 import { Event } from '@services/event/event';
 import OrgFacade from '@services/organization/facade/orgFacade';
+import createHttpError from 'http-errors';
 import { NewEventDataV, UpdateEventDataV } from './validation';
 
 class EventController {
@@ -41,6 +42,15 @@ class EventController {
             return response;
         } catch (e) {
             return EventController.sendError(e);
+        }
+    };
+
+    getEventById = async (id: string): Promise<IEvent> => {
+        try {
+            const response = await DbProvider.getEventById(id);
+            return response.data;
+        } catch (e) {
+            throw createHttpError(500, 'Get Date by id error', e);
         }
     };
 

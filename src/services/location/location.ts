@@ -1,7 +1,7 @@
 import {
     Entity, Column, JoinColumn, PrimaryGeneratedColumn, OneToOne, OneToMany
 } from 'typeorm';
-import { Date } from '@services/date/date';
+import { EventDate } from '@services/date/date';
 import { Scheme } from '@services/scheme/scheme';
 
 @Entity({ name: 'location' })
@@ -25,7 +25,7 @@ export class Location {
     @JoinColumn({ name: 'id' })
     schemes: Scheme[];
 
-    @OneToOne(() => Date, date => date.loc)
+    @OneToOne(() => EventDate, date => date.loc)
     @JoinColumn([
         { name: 'id_loc' },
         { name: 'id_ch' }

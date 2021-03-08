@@ -1,7 +1,7 @@
 import {
     Entity, Column, JoinColumn, PrimaryColumn, ManyToOne, PrimaryGeneratedColumn, OneToMany
 } from 'typeorm';
-import { Date } from '@services/date/date';
+import { EventDate } from '@services/date/date';
 import { PricePolicy } from '@services/price_policy/price_policy';
 import { Promocode } from '@services/promocode/promocode';
 
@@ -25,7 +25,7 @@ export class TicketCat {
     @Column({ type: 'integer' })
     count: number;
 
-    @ManyToOne(() => Date, date => date.ticket_categories)
+    @ManyToOne(() => EventDate, date => date.ticket_categories)
     @JoinColumn({ name: 'id' })
     date: Date;
 
