@@ -1,72 +1,55 @@
 import { DbProvider } from '@services/user/providers/dbProvider';
-import { User } from '@services/user/user';
-import { TUserReqData } from '@services/user/userTypes';
+import { TUserReqData, IUser } from '@services/user/userTypes';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
+import createHttpError from 'http-errors';
 import { UserDataV } from './validation/userDataV';
 import { NewUserDataV } from './validation/newUserDataV';
+import validate from './validation';
 
 class UserController {
-    getUserByEmail = async (email: string): Promise<User> => {
+    getUserByEmail = async (email: string): Promise<IUser> => {
         const user = await DbProvider.getUserByEmail(email);
         return user;
     };
 
-    registerUser = async (data: TUserReqData): Promise<gt.TResponse> => {
-        const userData = plainToClass(NewUserDataV, data);
-        const errors:ValidationError[] = await User.validate(userData);
-        let response: gt.TResponse;
-        if (errors.length) {
-            response = UserController.sendValidationError(errors);
-        } else {
-            const user = await this.getUserByEmail(data.email);
-            if (user) {
-                response = UserController.sendError({
-                    message: 'User with this email is already registered'
-                });
-            } else {
-                response = await DbProvider.createUser(userData);
+    registerUser = async (data: TUserReqData): Promise<IUser> => {
+        try {
+            const userData = plainToClass(NewUserDataV, data);
+            const errors:ValidationError[] = await validate(userData);
+            if (errors.length) {
+                throw createHttpError(400, 'Validation errors', errors);
             }
+            let user = await this.getUserByEmail(data.email);
+            if (user) {
+                throw createHttpError(409, 'This email is already registered');
+            } else {
+                user = await DbProvider.createUser(userData);
+                return user;
+            }
+        } catch (e) {
+            throw createHttpError(500, 'Create Date error', e);
         }
-        return response;
     };
 
-    changeUserInfo = async (data: TUserReqData): Promise<gt.TResponse> => {
-        const userData = plainToClass(UserDataV, data);
-        const errors:ValidationError[] = await User.validate(userData);
-        let response: gt.TResponse;
-        if (errors.length) {
-            response = UserController.sendValidationError(errors);
-        } else {
-            const user = await this.getUserByEmail(data.email);
-            if (user) {
-                response = await DbProvider.updateUser(userData);
-            } else {
-                response = UserController.sendError({
-                    message: 'User with this email does not exist'
-                });
+    changeUserInfo = async (data: TUserReqData): Promise<IUser> => {
+        try {
+            const userData = plainToClass(UserDataV, data);
+            const errors:ValidationError[] = await validate(userData);
+            if (errors.length) {
+                throw createHttpError(400, 'Validation errors', errors);
             }
+            let user = await this.getUserByEmail(data.email);
+            if (user) {
+                user = await DbProvider.updateUser(userData);
+            } else {
+                throw createHttpError(404, 'User with this email was not found');
+            }
+            return user;
+        } catch (e) {
+            throw createHttpError(500, 'Create Date error', e);
         }
-        return response;
     };
-
-    private static sendValidationError(errors:ValidationError[]) {
-        let errorTexts: any[] = [];
-        for (const errorItem of errors) {
-            errorTexts = errorTexts.concat(errorItem.constraints);
-        }
-        return UserController.sendError({
-            message: 'Validation error',
-            data: errorTexts
-        });
-    }
-
-    private static sendError(error: any) {
-        return {
-            isSuccess: false,
-            error: error
-        };
-    }
 }
 
 const userController = new UserController();

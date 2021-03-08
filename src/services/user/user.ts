@@ -3,7 +3,6 @@ import {
 } from 'typeorm';
 import { Ticket } from '@services/ticket/ticket';
 import { TConfigNotification, TConfigPermission, TUserReqData, IUser } from '@services/user/userTypes';
-import { validate, ValidationError } from 'class-validator';
 import { setDefaultValue } from 'setters/dist';
 
 import crypto from 'crypto';
@@ -32,11 +31,6 @@ export class User implements IUser {
     static getHashPass = function (pass: string): string {
         return crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
             1000, 64, 'sha512').toString('hex');
-    };
-
-    static validate = function (data: TUserReqData): Promise<ValidationError[]> {
-        return validate(data, { skipMissingProperties: true })
-            .then((errors: ValidationError[]) => errors);
     };
 
     @PrimaryColumn({ type: 'character varying', length: 100 })

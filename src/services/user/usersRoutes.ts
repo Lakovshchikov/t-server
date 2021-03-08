@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import path from 'path';
+import createHttpError from 'http-errors';
+import asyncHandler from 'express-async-handler';
 import usersController from './usersController';
 import { User } from './user';
 
@@ -9,8 +11,7 @@ const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     if (user instanceof User) {
         next();
     } else {
-        res.redirect(401, '/login');
-        // res.status(401).location('/login').end();
+        next(createHttpError(401, 'Unauthorized', { redirectUrl: '/login' }));
     }
 };
 
@@ -46,11 +47,11 @@ export default [
     {
         path: '/reg',
         method: 'post',
-        handler: async (req: Request, res: Response) => {
-            try {
-                const response: gt.TResponse = await usersController.registerUser(req.body);
-                if (response.isSuccess) {
-                    req.login(response.data, (err) => {
+        handler: [
+            asyncHandler(async (req: Request, res: Response) => {
+                const user = await usersController.registerUser(req.body);
+                if (user) {
+                    req.login(user, (err) => {
                         if (err) {
                             console.error(err);
                             res.redirect('/login');
@@ -59,13 +60,10 @@ export default [
                         res.redirect('/');
                     });
                 } else {
-                    console.error(response.error.message);
-                    res.status(403).send(response.error);
+                    throw createHttpError(500, 'InternalServerError. Reg user error');
                 }
-            } catch (e) {
-                res.status(500).send(e.message);
-            }
-        }
+            })
+        ]
     },
     // Логаут пользователя
     {
@@ -83,19 +81,20 @@ export default [
         method: 'post',
         handler: [
             checkUserType,
-            async (req: Request, res: Response) => {
-                const { user } = req;
-                const response: gt.TResponse = await usersController.changeUserInfo({
-                    // @ts-ignore
-                    ...req.body, email: user.email
-                });
-                if (response.isSuccess) {
-                    res.redirect('/user');
-                } else {
-                    console.error(response.error.message);
-                    res.status(403).send(response.error);
+            asyncHandler(
+                async (req: Request, res: Response) => {
+                    const { user } = req;
+                    const appUser = await usersController.changeUserInfo({
+                        // @ts-ignore
+                        ...req.body, email: user.email
+                    });
+                    if (appUser) {
+                        res.redirect('/user');
+                    } else {
+                        throw createHttpError(500, 'InternalServerError. Edit user error');
+                    }
                 }
-            }
+            )
         ]
     },
     // Страница пользователя

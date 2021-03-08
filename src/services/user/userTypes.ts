@@ -45,4 +45,6 @@ export interface IUser {
     config_notification: TConfigNotification;
 
     config_permission: TConfigPermission;
+
+    validPass: (pass: string) => boolean
 }
