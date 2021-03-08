@@ -20,8 +20,11 @@ import usersRoutes from './user/usersRoutes';
 import orgRoutes from './organization/orgRoutes';
 import commentRoute from './comment/commentRoute';
 import dateRoutes from './date/dateRoute';
+import memberRoutes from './member/memberRoutes';
 
-export default [ ...usersRoutes, ...orgRoutes, ...arRoutes, ...commentRoute, ...eventRoute, ...dateRoutes ];
+export default [ ...usersRoutes, ...orgRoutes, ...arRoutes,
+    ...commentRoute, ...eventRoute, ...dateRoutes, ...memberRoutes ];
+
 export const entities = [ User, Ticket, Organization, Event,
     AppEdit, Comment, Component, EventDate, Location, Scheme, Member,
     TicketCat, PricePolicy, Promocode, AppReg ];
