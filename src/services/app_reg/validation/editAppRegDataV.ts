@@ -5,6 +5,7 @@ export class EditAppRegDataV implements AbstractAppRegDataV {
     @IsDefined()
     id: string;
 
+    @IsOptional()
     id_org: string;
 
     @IsOptional()

@@ -1,39 +1,37 @@
 import { AppReg } from '@services/app_reg/app_reg';
 import { getRepository } from 'typeorm';
+import { IAppOrg } from '@services/app_reg/arTypes';
 
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
+import createHttpError from 'http-errors';
 
 export abstract class DbProvider {
-    static async createAppReg(data: AbstractAppRegDataV): Promise<gt.TResponse> {
+    static async createAppReg(data: AbstractAppRegDataV): Promise<IAppOrg> {
         try {
             return this.saveAppReg(data);
         } catch (e) {
-            return this.sendDBError('Create AppReg error. Database error', e);
+            throw createHttpError(500, 'Create AppReg error. Database error', e);
         }
     }
 
-    static async editAppReg(data: AbstractAppRegDataV) :Promise<gt.TResponse> {
+    static async editAppReg(data: AbstractAppRegDataV) :Promise<IAppOrg> {
         try {
             const appReg = await this.getAppRegById(data.id);
-            if (appReg.isSuccess) {
+            if (appReg) {
                 const appRepository = await getRepository(AppReg);
-                const currentAr = appReg.data as AppReg;
-                currentAr.setProperties(data);
-                appRepository.save(currentAr);
+                appReg.setProperties(data);
+                appRepository.save(appReg);
 
-                return {
-                    isSuccess: true,
-                    data: currentAr
-                };
+                return appReg;
             } else {
                 return appReg;
             }
         } catch (e) {
-            return this.sendDBError('Edit AppReg error. Database error', e);
+            throw createHttpError(500, 'Edit AppReg error. Database error', e);
         }
     }
 
-    static async getAppRegByOrgId(id: string): Promise<gt.TResponse> {
+    static async getAppRegByOrgId(id: string): Promise<IAppOrg> {
         try {
             const appRepository = await getRepository(AppReg);
             const appReg = await appRepository
@@ -41,16 +39,13 @@ export abstract class DbProvider {
                 .where('app_reg.id_org = :org_id', { org_id: id })
                 .getOne();
 
-            return {
-                isSuccess: true,
-                data: appReg
-            };
+            return appReg;
         } catch (e) {
-            return this.sendDBError('Query param error', e);
+            throw createHttpError(500, 'Query param error', e);
         }
     }
 
-    static async getAppRegById(id: string): Promise<gt.TResponse> {
+    static async getAppRegById(id: string): Promise<IAppOrg> {
         try {
             const appRepository = await getRepository(AppReg);
             const appReg = await appRepository
@@ -58,33 +53,17 @@ export abstract class DbProvider {
                 .where('app_reg.id = :id', { id: id })
                 .getOne();
 
-            return {
-                isSuccess: true,
-                data: appReg
-            };
+            return appReg;
         } catch (e) {
-            return this.sendDBError('Query param error', e);
+            throw createHttpError(500, 'Query param error', e);
         }
     }
 
-    private static sendDBError(message: string, e: any): gt.TResponse {
-        return {
-            isSuccess: false,
-            error: {
-                message: message,
-                data: e
-            }
-        };
-    }
-
-    private static async saveAppReg(data: AbstractAppRegDataV) :Promise<gt.TResponse> {
+    private static async saveAppReg(data: AbstractAppRegDataV) :Promise<IAppOrg> {
         const appRepository = await getRepository(AppReg);
         const appReg = new AppReg(data);
         await appRepository.save(appReg);
 
-        return {
-            isSuccess: true,
-            data: appReg
-        };
+        return appReg;
     }
 }

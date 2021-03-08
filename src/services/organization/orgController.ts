@@ -1,79 +1,55 @@
-import { Organization } from '@services/organization/org';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
+import createHttpError from 'http-errors';
 import { DbProvider } from './providers/dbProvider';
-import { TOrgReqData } from './orgTypes';
+import { TOrgReqData, IOrganization } from './orgTypes';
 import { NewOrgDataV } from './validation/newOrgDataV';
 import { EditOrgDataV } from './validation/editOrgDataV';
 import OrgFacade from './facade/orgFacade';
+import validate from './validation';
 
 class OrgController {
-    getUserByEmail = async (email: string): Promise<Organization> => {
-        const user = await DbProvider.getOrgByEmail(email);
-        return user;
+    getUserByEmail = async (email: string): Promise<IOrganization> => {
+        try {
+            const user = await DbProvider.getOrgByEmail(email);
+            return user;
+        } catch (e) {
+            throw createHttpError(500, 'Get Date by id error', e);
+        }
     };
 
-    registerOrg = async (data: TOrgReqData): Promise<gt.TResponse> => {
+    registerOrg = async (data: TOrgReqData): Promise<IOrganization> => {
         const userData = plainToClass(NewOrgDataV, data);
-        const errors:ValidationError[] = await Organization.validate(userData);
-        let response: gt.TResponse;
+        const errors:ValidationError[] = await validate(userData);
         if (errors.length) {
-            response = OrgController.sendValidationError(errors);
-        } else {
-            const org = await this.getUserByEmail(data.email);
-            if (org) {
-                OrgController.sendError({
-                    message: 'Organization with this email is already registered'
-                });
-            } else {
-                response = await DbProvider.createUser(userData);
-                const responseAr = await OrgFacade.createAppReg({
-                    id_org: response.data.id
-                });
-                if (responseAr.isSuccess === false) {
-                    return responseAr;
-                }
-            }
+            throw createHttpError(400, 'Validation errors', errors);
         }
-        return response;
+        let org = await this.getUserByEmail(data.email);
+        if (org) {
+            throw createHttpError(409, 'This email is already registered');
+        } else {
+            org = await DbProvider.createUser(userData);
+            const appReg = await OrgFacade.createAppReg({
+                id_org: org.id
+            });
+            return org;
+        }
     };
 
-    changeOrgInfo = async (data: TOrgReqData): Promise<gt.TResponse> => {
+    changeOrgInfo = async (data: TOrgReqData): Promise<IOrganization> => {
         const userData = plainToClass(EditOrgDataV, data);
-        const errors:ValidationError[] = await Organization.validate(userData);
-        let response: gt.TResponse;
+        const errors:ValidationError[] = await validate(userData);
         if (errors.length) {
-            response = OrgController.sendValidationError(errors);
+            throw createHttpError(400, 'Validation errors', errors);
+        }
+        let org = await this.getUserByEmail(data.email);
+        if (org) {
+            org = await DbProvider.updateUser(userData);
+            return org;
         } else {
-            const org = await this.getUserByEmail(data.email);
-            if (org) {
-                response = await DbProvider.updateUser(userData);
-            } else {
-                OrgController.sendError({
-                    message: 'Organization with this email does not exist'
-                });
-            }
+            throw createHttpError(404, 'User with this email was not found');
         }
-        return response;
     };
-
-    private static sendValidationError(errors:ValidationError[]) {
-        let errorTexts: any[] = [];
-        for (const errorItem of errors) {
-            errorTexts = errorTexts.concat(errorItem.constraints);
-        }
-        return OrgController.sendError({
-            message: 'Validation error',
-            data: errorTexts
-        });
-    }
-
-    private static sendError(error: any) {
-        return {
-            isSuccess: false,
-            error: error
-        };
-    }
 }
 
 const orgController = new OrgController();

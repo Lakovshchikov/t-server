@@ -2,7 +2,6 @@ import {
     Entity, Column, JoinColumn, PrimaryGeneratedColumn, OneToOne
 } from 'typeorm';
 import { Organization } from '@services/organization/org';
-import { validate, ValidationError } from 'class-validator';
 import { setDefaultValue } from 'setters/dist';
 import { Exclude, classToPlain } from 'class-transformer';
 import { IAppOrg, EStatus, TAppRegReqData } from './arTypes';
@@ -12,12 +11,6 @@ export class AppReg implements IAppOrg {
     constructor(data:TAppRegReqData | null) {
         if (data) this.setProperties(data);
     }
-
-    @Exclude({ toPlainOnly: false, toClassOnly: false })
-    static validate = function (data: TAppRegReqData) : Promise<ValidationError[]> {
-        return validate(data, { skipMissingProperties: true })
-            .then((errors: ValidationError[]) => errors);
-    };
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -42,7 +35,7 @@ export class AppReg implements IAppOrg {
     serialize = (): Record<string, any> => classToPlain(this);
 
     @Exclude({ toPlainOnly: false, toClassOnly: false })
-    public setProperties(data: TAppRegReqData | null) {
+    setProperties(data: TAppRegReqData | null) {
         this.id_org = setDefaultValue(data.id_org, this.id_org, null);
         this.doc_id = setDefaultValue(data.doc_id, this.doc_id, null);
         this.status = setDefaultValue(data.status, EStatus.PROCESSING, null);

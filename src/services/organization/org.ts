@@ -4,7 +4,6 @@ import {
 import { Event } from '@services/event/event';
 import { AppReg } from '@services/app_reg/app_reg';
 import crypto from 'crypto';
-import { validate, ValidationError } from 'class-validator';
 import { setDefaultValue } from 'setters/dist';
 import {
     IOrganization, EOrgForm, ETaxSystem, EReason, ECountry,
@@ -21,11 +20,6 @@ export class Organization implements IOrganization {
         return crypto.pbkdf2Sync(pass, process.env.PASS_HASH_KEY,
             1000, 64, 'sha512').toString('hex');
     }
-
-    static validate = function (data: TOrgReqData): Promise<ValidationError[]> {
-        return validate(data, { skipMissingProperties: true })
-            .then((errors: ValidationError[]) => errors);
-    };
 
     @PrimaryGeneratedColumn('uuid')
     id: string;

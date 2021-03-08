@@ -23,4 +23,8 @@ export interface IAppOrg {
     status: number;
 
     desc: string | null;
+
+    setProperties: (date: TAppRegReqData) => void;
+
+    serialize: () => Record<string, any>
 }

@@ -1,6 +1,8 @@
 import passport from 'passport';
 import { NextFunction, Request, Response } from 'express';
 import path from 'path';
+import asyncHandler from 'express-async-handler';
+import createHttpError from 'http-errors';
 import orgController from './orgController';
 import { Organization } from './org';
 
@@ -9,7 +11,7 @@ const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     if (user instanceof Organization) {
         next();
     } else {
-        res.redirect(401, '/org/login');
+        next(createHttpError(401, 'Unauthorized', { redirectUrl: '/org/login' }));
     }
 };
 
@@ -64,11 +66,11 @@ export default [
     {
         path: '/org/reg',
         method: 'post',
-        handler: async (req: Request, res: Response) => {
-            try {
-                const response: gt.TResponse = await orgController.registerOrg(req.body);
-                if (response.isSuccess) {
-                    req.login(response.data, (err) => {
+        handler: [
+            asyncHandler(async (req: Request, res: Response) => {
+                const org = await orgController.registerOrg(req.body);
+                if (org) {
+                    req.login(org, (err) => {
                         if (err) {
                             console.error(err);
                             res.redirect('/org/login');
@@ -77,13 +79,10 @@ export default [
                         res.redirect('/org');
                     });
                 } else {
-                    console.error(response.error.message);
-                    res.status(403).send(response.error);
+                    throw createHttpError(500, 'InternalServerError. Reg organization error');
                 }
-            } catch (e) {
-                res.status(500).send(e.message);
-            }
-        }
+            })
+        ]
     }
     // // Логаут
 ];

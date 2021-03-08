@@ -77,4 +77,6 @@ export interface IOrganization {
     position: string;
 
     reason: EReason;
+
+    validPass: (pass: string) => boolean
 }

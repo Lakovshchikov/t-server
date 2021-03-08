@@ -1,4 +1,3 @@
-import { AppReg } from '@services/app_reg/app_reg';
 import { DbProvider } from '@services/app_reg/providers/dbProvider';
 import { plainToClass } from 'class-transformer';
 import { NewAppRegDataV } from '@services/app_reg/validation/newAppRegDataV';
@@ -7,33 +6,32 @@ import UserFacade from '@services/user/facade/userFacade';
 import OrgFacade from '@services/organization/facade/orgFacade';
 import { EditAppRegDataV } from '@services/app_reg/validation/editAppRegDataV';
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
+import validate from '@services/app_reg/validation';
+import { IAppOrg } from '@services/app_reg/arTypes';
+import createHttpError from 'http-errors';
 
 class ArController {
-    createAppReg = async (data: AbstractAppRegDataV): Promise<gt.TResponse> => {
+    createAppReg = async (data: AbstractAppRegDataV): Promise<IAppOrg> => {
         const arData = plainToClass(NewAppRegDataV, data);
-        const errors:ValidationError[] = await AppReg.validate(arData);
-        let response: gt.TResponse;
+        const errors:ValidationError[] = await validate(arData);
         if (errors.length) {
-            response = ArController.sendValidationError(errors);
-        } else {
-            response = await DbProvider.createAppReg(data);
+            throw createHttpError(400, 'Validation errors', errors);
         }
-        return response;
+        const appReg = await DbProvider.createAppReg(data);
+        return appReg;
     };
 
-    editAppReg = async (data: AbstractAppRegDataV) : Promise<gt.TResponse> => {
+    editAppReg = async (data: AbstractAppRegDataV) : Promise<IAppOrg> => {
         const arData = plainToClass(EditAppRegDataV, data);
-        const errors:ValidationError[] = await AppReg.validate(arData);
-        let response: gt.TResponse;
+        const errors:ValidationError[] = await validate(arData);
         if (errors.length) {
-            response = ArController.sendValidationError(errors);
-        } else {
-            response = await DbProvider.editAppReg(data);
+            throw createHttpError(400, 'Validation errors', errors);
         }
-        return response;
+        const appReg = await DbProvider.editAppReg(data);
+        return appReg;
     };
 
-    getAppRegByOrgId = async (id: string) :Promise<gt.TResponse> => {
+    getAppRegByOrgId = async (id: string) :Promise<IAppOrg> => {
         const appReg = await DbProvider.getAppRegByOrgId(id);
         return appReg;
     };
@@ -43,24 +41,6 @@ class ArController {
     checkAdminPermission = (data: any) :boolean => UserFacade.checkAdminPermission(data);
 
     checkOrg = (data:any): boolean => OrgFacade.checkType(data);
-
-    private static sendValidationError(errors:ValidationError[]) {
-        let errorTexts: any[] = [];
-        for (const errorItem of errors) {
-            errorTexts = errorTexts.concat(errorItem.constraints);
-        }
-        return ArController.sendError({
-            message: 'Validation error',
-            data: errorTexts
-        });
-    }
-
-    private static sendError(error: any) {
-        return {
-            isSuccess: false,
-            error: error
-        };
-    }
 }
 
 const arController = new ArController();
