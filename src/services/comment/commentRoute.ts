@@ -2,14 +2,15 @@ import { Comment } from '@services/comment/comment';
 import { NextFunction, Request, Response } from 'express';
 import { TCommentReqData, IComment, TConfirmCommentReqData } from '@services/comment/commentTypes';
 import commentController from '@services/comment/commentController';
+import asyncHandler from 'express-async-handler';
+import createHttpError from 'http-errors';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
     if (commentController.checkUser(user)) {
         next();
     } else {
-        res.redirect(401, '/org/login');
-        // res.status(401).location('/login').end();
+        next(createHttpError(401, 'Unauthorized', { redirectUrl: '/org/login' }));
     }
 };
 
@@ -21,24 +22,20 @@ export default [
         method: 'get',
         handler: [
             checkUserType,
-            async (req: Request, res: Response) => {
-                try {
-                    const id = req.query.id_ev;
-                    const response = await commentController.getCommentsByEventId(id.toString());
-                    if (response.isSuccess) {
-                        const comments: Comment[] = response.data;
-                        const result: (Record<string, any>)[] = [];
-                        comments.forEach((c: Comment) => {
-                            result.push(c.serialize());
-                        });
-                        res.json(result);
-                    } else {
-                        res.status(409).send(response.error);
-                    }
-                } catch (e) {
-                    res.status(500).send(e.message);
+            asyncHandler(async (req: Request, res: Response) => {
+                const id = req.query.id_ev;
+                const comments = await commentController.getCommentsByEventId(id.toString());
+                if (comments.length) {
+                    const result: (Record<string, any>)[] = [];
+                    comments.forEach((c: Comment) => {
+                        result.push(c.serialize());
+                    });
+                    res.json(result);
+                } else {
+                    throw createHttpError(404, 'Сomments are not available for this event');
                 }
-            }
+            })
+
         ]
     },
     {
@@ -46,20 +43,16 @@ export default [
         method: 'post',
         handler: [
             checkUserType,
-            async (req: Request, res: Response) => {
-                try {
-                    const data: TCommentReqData = req.body;
-                    const response: gt.TResponse = await commentController.predictComments(data);
-                    if (response.isSuccess) {
-                        const result = response.data.map((c:Comment) => c.serialize());
-                        res.json(result);
-                    } else {
-                        res.status(500).send(response.error);
-                    }
-                } catch (e) {
-                    res.status(500).send(e.message);
+            asyncHandler(async (req: Request, res: Response) => {
+                const data: TCommentReqData = req.body;
+                const comments = await commentController.predictComments(data);
+                if (comments) {
+                    const result = comments.map((c:Comment) => c.serialize());
+                    res.json(result);
+                } else {
+                    throw createHttpError(500, 'Predict comments error');
                 }
-            }
+            })
         ]
     },
     {
@@ -67,20 +60,16 @@ export default [
         method: 'put',
         handler: [
             checkUserType,
-            async (req: Request, res: Response) => {
-                try {
-                    const data: TConfirmCommentReqData = req.body;
-                    const response: gt.TResponse = await commentController.confirmPrediction(data);
-                    if (response.isSuccess) {
-                        const result = response.data.map((c:Comment) => c.serialize());
-                        res.json(result);
-                    } else {
-                        res.status(500).send(response.error);
-                    }
-                } catch (e) {
-                    res.status(500).send(e.message);
+            asyncHandler(async (req: Request, res: Response) => {
+                const data: TConfirmCommentReqData = req.body;
+                const comments = await commentController.confirmPrediction(data);
+                if (comments) {
+                    const result = comments.map((c:Comment) => c.serialize());
+                    res.json(result);
+                } else {
+                    throw createHttpError(500, 'Predict comments error');
                 }
-            }
+            })
         ]
     }
 ];

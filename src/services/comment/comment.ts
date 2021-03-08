@@ -2,8 +2,7 @@ import {
     Entity, Column, JoinColumn, PrimaryGeneratedColumn, ManyToOne
 } from 'typeorm';
 import { Event } from '@services/event/event';
-import { IComment, TInfo, TCommentReqData, TConfirmCommentReqData } from '@services/comment/commentTypes';
-import { validate, ValidationError } from 'class-validator';
+import { IComment, TInfo } from '@services/comment/commentTypes';
 import { setDefaultValue } from 'setters/dist';
 import { Exclude, classToPlain } from 'class-transformer';
 
@@ -12,12 +11,6 @@ export class Comment implements IComment {
     constructor(data: IComment) {
         if (data) this.setProperties(data);
     }
-
-    @Exclude({ toPlainOnly: false, toClassOnly: false })
-    static validate = function (data: TCommentReqData | TConfirmCommentReqData): Promise<ValidationError[]> {
-        return validate(data, { skipMissingProperties: true })
-            .then((errors: ValidationError[]) => errors);
-    };
 
     @PrimaryGeneratedColumn('uuid')
     id: string;

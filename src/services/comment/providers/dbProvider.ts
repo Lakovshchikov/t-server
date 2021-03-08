@@ -1,22 +1,24 @@
 import { Comment } from '@services/comment/comment';
-import { TNNComment } from '@services/comment/commentTypes';
+import { TNNComment, IComment } from '@services/comment/commentTypes';
 import { getRepository } from 'typeorm';
+import createHttpError from 'http-errors';
 
 export abstract class DbProvider {
-    static getCommentsByIds = async (ids: string[]): Promise<gt.TResponse> => {
+    static getCommentsByIds = async (ids: string[]): Promise<IComment[]> => {
         try {
             const commentRepository = await getRepository(Comment);
             const comments = await commentRepository
                 .createQueryBuilder('comments')
                 .where('comments.id IN (:...ids)', { ids: ids })
                 .getMany();
-            return DbProvider.createResponse(comments);
+
+            return comments;
         } catch (e) {
-            return DbProvider.sendDBError('getCommentsByIds DB error', e);
+            throw createHttpError(500, 'getCommentsByIds error. Database error', e);
         }
     };
 
-    static getCommentsByEventId = async (event_id: string): Promise<gt.TResponse> => {
+    static getCommentsByEventId = async (event_id: string): Promise<IComment[]> => {
         try {
             const commentRepository = await getRepository(Comment);
             const comments = await commentRepository
@@ -24,13 +26,13 @@ export abstract class DbProvider {
                 .where('comments.id_ev = :id', { id: event_id })
                 .getMany();
 
-            return DbProvider.createResponse(comments);
+            return comments;
         } catch (e) {
-            return DbProvider.sendDBError('getCommentsByEventId DB error', e);
+            throw createHttpError(500, 'getCommentsByEventId error. Database error', e);
         }
     };
 
-    static saveComments = async (data: TNNComment | TNNComment[], id_ev: string) : Promise<gt.TResponse> => {
+    static saveComments = async (data: TNNComment | TNNComment[], id_ev: string) : Promise<IComment[]> => {
         try {
             const commentRepository = await getRepository(Comment);
             const comments: Comment[] = [];
@@ -51,32 +53,16 @@ export abstract class DbProvider {
                 }));
             });
             await commentRepository.save(comments);
-            return DbProvider.createResponse(comments);
+            return comments;
         } catch (e) {
-            return DbProvider.sendDBError('Save comment DB error', e);
+            throw createHttpError(500, 'saveComments error. Database error', e);
         }
     };
 
-    static updateComments = async (comments: Comment[]): Promise<gt.TResponse> => {
+    static updateComments = async (comments: IComment[]): Promise<IComment[]> => {
         const commentRepository = await getRepository(Comment);
         await commentRepository.save(comments);
-        return DbProvider.createResponse(comments);
+
+        return comments;
     };
-
-    private static sendDBError(message: string, e: any): gt.TResponse {
-        return {
-            isSuccess: false,
-            error: {
-                message: message,
-                data: e
-            }
-        };
-    }
-
-    private static createResponse(data: any): gt.TResponse {
-        return {
-            isSuccess: true,
-            data: data
-        };
-    }
 }
