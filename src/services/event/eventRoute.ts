@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { IEvent, TEventData } from '@services/event/eventTypes';
+import { TEventData } from '@services/event/eventTypes';
 import eventController from '@services/event/eventController';
+import createHttpError from 'http-errors';
+import asyncHandler from 'express-async-handler';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
@@ -30,20 +32,15 @@ export default [
         handler: [
             checkUserType,
             checkOrgId,
-            async (req: Request, res: Response) => {
-                try {
-                    const data: TEventData = req.body;
-                    const response = await eventController.createEvent(data);
-                    if (response.isSuccess) {
-                        const event = response.data as IEvent;
-                        res.json(event.serialize());
-                    } else {
-                        res.status(409).send(response.error);
-                    }
-                } catch (e) {
-                    res.status(500).send(e.message);
+            asyncHandler(async (req: Request, res: Response) => {
+                const data: TEventData = req.body;
+                const event = await eventController.createEvent(data);
+                if (event) {
+                    res.json(event.serialize());
+                } else {
+                    throw createHttpError(400, 'Create event error');
                 }
-            }
+            })
         ]
     },
     // Изменение мероприятий
@@ -53,20 +50,15 @@ export default [
         handler: [
             checkUserType,
             checkOrgId,
-            async (req: Request, res:Response) => {
-                try {
-                    const data: TEventData = req.body;
-                    const response: gt.TResponse = await eventController.updateEvent(data);
-                    if (response.isSuccess) {
-                        const event = response.data as IEvent;
-                        res.json(event.serialize());
-                    } else {
-                        res.status(409).send(response.error);
-                    }
-                } catch (e) {
-                    res.status(500).send(e);
+            asyncHandler(async (req: Request, res:Response) => {
+                const data: TEventData = req.body;
+                const event = await eventController.updateEvent(data);
+                if (event) {
+                    res.json(event.serialize());
+                } else {
+                    throw createHttpError(400, 'Create event error');
                 }
-            }
+            })
         ]
     }
 ];

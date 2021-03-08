@@ -8,7 +8,6 @@ import { Component } from '@services/component/component';
 import { EventDate } from '@services/date/date';
 import { IEvent, TEventData } from '@services/event/eventTypes';
 import { v4 as uuidv4 } from 'uuid';
-import { validate, ValidationError } from 'class-validator';
 import { Exclude, classToPlain } from 'class-transformer';
 import { setDefaultValue } from 'setters/dist';
 
@@ -17,11 +16,6 @@ export class Event implements IEvent {
     constructor(data: TEventData) {
         if (data) this.setProperties(data);
     }
-
-    static validate = function (data: TEventData): Promise<ValidationError[]> {
-        return validate(data, { skipMissingProperties: true })
-            .then((errors: ValidationError[]) => errors);
-    };
 
     @PrimaryGeneratedColumn('uuid')
     id: string;

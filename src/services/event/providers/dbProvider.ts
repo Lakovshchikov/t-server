@@ -1,55 +1,47 @@
 import { IEvent, TEventData } from '@services/event/eventTypes';
 import { getRepository } from 'typeorm';
 import { Event } from '@services/event/event';
+import createHttpError from 'http-errors';
 
 export abstract class DbProvider {
-    static getEventById = async (id: string): Promise<gt.TResponse> => {
-        const eventsRepository = await getRepository(Event);
-        const event = await eventsRepository
-            .createQueryBuilder('event')
-            .where('event.id = :id', { id })
-            .getOne();
-        return DbProvider.createResponse(event);
+    static getEventById = async (id: string): Promise<IEvent> => {
+        try {
+            const eventsRepository = await getRepository(Event);
+            const event = await eventsRepository
+                .createQueryBuilder('event')
+                .where('event.id = :id', { id })
+                .getOne();
+
+            if (event === undefined) {
+                throw createHttpError(404, `Event with id: ${id} not found`);
+            }
+            return event;
+        } catch (e) {
+            throw createHttpError(500, 'getEventById event error', e);
+        }
     };
 
-    static createEvent = async (data: TEventData): Promise<gt.TResponse> => {
+    static createEvent = async (data: TEventData): Promise<IEvent> => {
         try {
             const event = new Event(data);
             return DbProvider.saveEvent(event);
         } catch (e) {
-            return DbProvider.sendDBError('createEvent DB error', e);
+            throw createHttpError(500, 'createEvent event error', e);
         }
     };
 
-    static updateEvent = async (event: IEvent): Promise<gt.TResponse> => {
+    static updateEvent = async (event: IEvent): Promise<IEvent> => {
         try {
             return DbProvider.saveEvent(event);
         } catch (e) {
-            return DbProvider.sendDBError('createEvent DB error', e);
+            throw createHttpError(500, 'updateEvent event error', e);
         }
     };
 
-    private static saveEvent = async (event: IEvent): Promise<gt.TResponse> => {
+    private static saveEvent = async (event: IEvent): Promise<IEvent> => {
         const eventsRepository = await getRepository(Event);
         await eventsRepository.save(event);
 
-        return DbProvider.createResponse(event);
+        return event;
     };
-
-    private static sendDBError(message: string, e: any): gt.TResponse {
-        return {
-            isSuccess: false,
-            error: {
-                message: message,
-                data: e
-            }
-        };
-    }
-
-    private static createResponse(data: any): gt.TResponse {
-        return {
-            isSuccess: true,
-            data: data
-        };
-    }
 }
