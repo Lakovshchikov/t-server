@@ -40,7 +40,7 @@ export class TicketCat implements ITicketCat {
     @Exclude()
     date: Date;
 
-    @OneToMany(() => PricePolicy, price_policy => price_policy.date)
+    @OneToMany(() => PricePolicy, price_policy => price_policy.ticket_cat)
     @JoinColumn({ referencedColumnName: 'id' })
     @Exclude()
     price_policy: PricePolicy[];

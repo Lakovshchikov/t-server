@@ -35,12 +35,12 @@ export abstract class DbProvider {
     static async getMembersByDateId(id: string) : Promise<IMember[]> {
         try {
             const memberRepository = await getRepository(Member);
-            const member = await memberRepository
+            const members = await memberRepository
                 .createQueryBuilder('member')
                 .where('member.id_d = :id', { id: id })
                 .getMany();
 
-            return member;
+            return members;
         } catch (e) {
             throw createHttpError(500, 'InternalServerError getMemberByEventId', e);
         }

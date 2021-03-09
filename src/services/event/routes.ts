@@ -9,7 +9,7 @@ const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     if (eventController.checkUser(user)) {
         next();
     } else {
-        res.redirect(401, '/org/login');
+        next(createHttpError(401, 'Unauthorized', { redirectUrl: '/org/login' }));
     }
 };
 
@@ -18,7 +18,7 @@ const checkOrgId = (req: Request, res: Response, next: NextFunction) => {
     const data: TEventData = req.body;
     // @ts-ignore
     if (data.id_org !== user.id) {
-        res.status(409).send('Wrong organization id');
+        next(createHttpError(403, 'The user does not have permission to do this.'));
     } else {
         next();
     }

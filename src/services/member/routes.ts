@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import { NextFunction, Request, Response } from 'express';
-import { IMember, TMemberData } from '@services/member/types';
+import { TMemberData } from '@services/member/types';
 import asyncHandler from 'express-async-handler';
 import memberController from './controller';
 
@@ -25,6 +25,14 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
     }
 });
 
+const getSerializedArray = (array: {serialize: () => Record<string, any>}[]): Record<string, any>[] => {
+    const result: (Record<string, any>)[] = [];
+    array.forEach((i) => {
+        result.push(i.serialize());
+    });
+    return result;
+};
+
 export default [
     {
         path: '/events/member',
@@ -35,10 +43,7 @@ export default [
             asyncHandler(async (req:Request, res:Response) => {
                 const data: TMemberData[] = req.body;
                 const members = await memberController.createMembers(data);
-                const result: (Record<string, any>)[] = [];
-                members.forEach((c: IMember) => {
-                    result.push(c.serialize());
-                });
+                const result = getSerializedArray(members);
                 res.json(result);
             })
         ]
@@ -52,10 +57,7 @@ export default [
             asyncHandler(async (req:Request, res:Response) => {
                 const data: TMemberData[] = req.body;
                 const members = await memberController.updateMember(data);
-                const result: (Record<string, any>)[] = [];
-                members.forEach((c: IMember) => {
-                    result.push(c.serialize());
-                });
+                const result = getSerializedArray(members);
                 res.json(result);
             })
         ]
@@ -68,10 +70,7 @@ export default [
             asyncHandler(async (req:Request, res:Response) => {
                 const dateId: string = req.query.date_id as string;
                 const members = await memberController.getMembersByDateId(dateId);
-                const result: (Record<string, any>)[] = [];
-                members.forEach((c: IMember) => {
-                    result.push(c.serialize());
-                });
+                const result = getSerializedArray(members);
                 res.json(result);
             })
         ]

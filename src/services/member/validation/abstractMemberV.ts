@@ -10,10 +10,10 @@ export class AbstractMemberV implements TMemberData {
 
     @IsString()
     @MaxLength(150, {
-        message: 'Address is too long. Max length is $constraint1 characters.'
+        message: 'Message is too long. Max length is $constraint1 characters.'
     })
     @MinLength(2, {
-        message: 'Address is too short. Min length is $constraint1 characters.'
+        message: 'Message is too short. Min length is $constraint1 characters.'
     })
     name: string;
 

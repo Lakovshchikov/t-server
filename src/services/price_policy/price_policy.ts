@@ -15,6 +15,6 @@ export class PricePolicy {
     percent: number;
 
     @ManyToOne(() => TicketCat, ticket_cat => ticket_cat.price_policy)
-    @JoinColumn({ name: 'id' })
-    date: TicketCat;
+    @JoinColumn({ referencedColumnName: 'id', name: '' })
+    ticket_cat: TicketCat;
 }
