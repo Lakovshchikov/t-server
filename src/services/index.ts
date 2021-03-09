@@ -1,29 +1,21 @@
-import { Event } from '@services/event/event';
-import { AppEdit } from '@services/app_edit/appEdit';
-import { Comment } from '@services/comment/comment';
+import { Event, routes as eventRoutes } from '@services/event/';
+import { AppEdit } from '@services/app_edit/';
+import { Comment, routes as commentRoutes } from '@services/comment/';
 import { Location } from '@services/location/location';
 import { Scheme } from '@services/scheme/scheme';
-import { Member } from '@services/member/member';
+import { Member, routes as memberRoutes } from '@services/member';
 import { TicketCat } from '@services/ticket_cat/ticketCat';
 import { PricePolicy } from '@services/price_policy/price_policy';
 import { Promocode } from '@services/promocode/promocode';
-import { AppReg } from '@services/app_reg/app_reg';
-import { User } from './user/user';
+import { AppReg, routes as appRegRoutes } from '@services/app_reg/';
+import { User, routes as usersRoutes } from './user';
 import { Ticket } from './ticket/ticket';
-import { Organization } from './organization/org';
+import { Organization, routes as orgRoutes } from './organization';
 import { Component } from './component/component';
-import { EventDate } from './date/date';
+import { EventDate, routes as dateRoutes } from './date';
 
-import eventRoute from './event/eventRoute';
-import arRoutes from './app_reg/arRoutes';
-import usersRoutes from './user/usersRoutes';
-import orgRoutes from './organization/orgRoutes';
-import commentRoute from './comment/commentRoute';
-import dateRoutes from './date/dateRoute';
-import memberRoutes from './member/memberRoutes';
-
-export default [ ...usersRoutes, ...orgRoutes, ...arRoutes,
-    ...commentRoute, ...eventRoute, ...dateRoutes, ...memberRoutes ];
+export default [ ...usersRoutes, ...orgRoutes, ...appRegRoutes,
+    ...commentRoutes, ...eventRoutes, ...dateRoutes, ...memberRoutes ];
 
 export const entities = [ User, Ticket, Organization, Event,
     AppEdit, Comment, Component, EventDate, Location, Scheme, Member,
