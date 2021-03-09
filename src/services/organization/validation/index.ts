@@ -1,5 +1,5 @@
 import { validate, ValidationError } from 'class-validator';
-import { TOrgReqData } from '../orgTypes';
+import { TOrgReqData } from '../types';
 
 export * from './abstractOrgDataV';
 export * from './editOrgDataV';

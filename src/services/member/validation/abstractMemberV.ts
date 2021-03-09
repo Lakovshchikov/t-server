@@ -1,4 +1,4 @@
-import { EMemberTypes, TMemberData } from '@services/member/memberTypes';
+import { EMemberTypes, TMemberData } from '@services/member/types';
 import {
     IsNumber, IsString, IsUUID, MaxLength, MinLength
 } from 'class-validator';

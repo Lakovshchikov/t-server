@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import asyncHandler from 'express-async-handler';
 import createHttpError from 'http-errors';
-import orgController from './orgController';
+import orgController from './controller';
 import { Organization } from './org';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {

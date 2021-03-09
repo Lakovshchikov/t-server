@@ -1,8 +1,8 @@
 import createHttpError from 'http-errors';
 import { NextFunction, Request, Response } from 'express';
-import { IMember, TMemberData } from '@services/member/memberTypes';
+import { IMember, TMemberData } from '@services/member/types';
 import asyncHandler from 'express-async-handler';
-import memberController from './memberController';
+import memberController from './controller';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;

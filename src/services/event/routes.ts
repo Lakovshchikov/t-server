@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { TEventData } from '@services/event/eventTypes';
-import eventController from '@services/event/eventController';
+import { TEventData } from '@services/event/types';
+import eventController from '@services/event/controller';
 import createHttpError from 'http-errors';
 import asyncHandler from 'express-async-handler';
 

@@ -1,5 +1,5 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
-import { TReqComment, TNNComment } from '@services/comment/commentTypes';
+import { TReqComment, TNNComment } from '@services/comment/types';
 import dotenv from 'dotenv';
 import createHttpError from 'http-errors';
 

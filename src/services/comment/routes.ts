@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { TCommentReqData, IComment, TConfirmCommentReqData } from '@services/comment/commentTypes';
-import commentController from '@services/comment/commentController';
+import { TCommentReqData, IComment, TConfirmCommentReqData } from '@services/comment/types';
+import commentController from '@services/comment/controller';
 import asyncHandler from 'express-async-handler';
 import createHttpError from 'http-errors';
 

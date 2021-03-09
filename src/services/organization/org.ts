@@ -8,7 +8,7 @@ import { setDefaultValue } from 'setters/dist';
 import {
     IOrganization, EOrgForm, ETaxSystem, EReason, ECountry,
     TOrgReqData
-} from './orgTypes';
+} from './types';
 
 @Entity({ name: 'organization' })
 export class Organization implements IOrganization {

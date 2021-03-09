@@ -1,4 +1,4 @@
-import { TEventData } from '@services/event/eventTypes';
+import { TEventData } from '@services/event/types';
 import { validate, ValidationError } from 'class-validator';
 
 export * from './newEventDataV';

@@ -1,7 +1,7 @@
 import { IsUUID, IsDefined, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { InfoDataValidation } from '@services/comment/validation/infoDataValidation';
-import { TCommentReqData } from '../commentTypes';
+import { TCommentReqData } from '../types';
 
 export class PredictDataV implements TCommentReqData {
     @IsDefined()

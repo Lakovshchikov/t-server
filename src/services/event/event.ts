@@ -6,7 +6,7 @@ import { AppEdit } from '@services/app_edit/appEdit';
 import { Comment } from '@services/comment/comment';
 import { Component } from '@services/component/component';
 import { EventDate } from '@services/date/date';
-import { IEvent, TEventData } from '@services/event/eventTypes';
+import { IEvent, TEventData } from '@services/event/types';
 import { v4 as uuidv4 } from 'uuid';
 import { Exclude, classToPlain } from 'class-transformer';
 import { setDefaultValue } from 'setters/dist';

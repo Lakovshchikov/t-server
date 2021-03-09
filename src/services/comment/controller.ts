@@ -1,8 +1,8 @@
 import {
     TCommentReqData, TComment, TReqComment, TNNComment, TConfirmCommentReqData, TConfirmComment, IComment
-} from '@services/comment/commentTypes';
+} from '@services/comment/types';
 import { DbProvider } from '@services/comment/providers/dbProvider';
-import OrgFacade from '@services/organization/facade/orgFacade';
+import { api as OrgFacade } from '@services/organization';
 import NNProvider from '@services/comment/providers/nnProvider';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
@@ -18,7 +18,7 @@ type UComments = {
     notUnique: IComment[]
 };
 
-class CommentController {
+class Controller {
     getCommentsByEventId = async (event_id: string): Promise<IComment[]> => {
         const comments = await DbProvider.getCommentsByEventId(event_id);
         return comments;
@@ -94,5 +94,5 @@ class CommentController {
     };
 }
 
-const commentController = new CommentController();
+const commentController = new Controller();
 export default commentController;

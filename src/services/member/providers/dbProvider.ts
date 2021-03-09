@@ -1,4 +1,4 @@
-import { TMemberData, IMember } from '@services/member/memberTypes';
+import { TMemberData, IMember } from '@services/member/types';
 import { getRepository } from 'typeorm';
 import { Member } from '@services/member/member';
 import createHttpError from 'http-errors';

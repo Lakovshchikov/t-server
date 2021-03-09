@@ -1,4 +1,4 @@
-import { TMemberData } from '@services/member/memberTypes';
+import { TMemberData } from '@services/member/types';
 import { validate, ValidationError } from 'class-validator';
 
 export * from './abstractMemberV';

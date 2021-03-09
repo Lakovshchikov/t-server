@@ -1,4 +1,4 @@
-import { TAppRegReqData, EStatus } from '@services/app_reg/arTypes';
+import { TAppRegReqData, EStatus } from '@services/app_reg/types';
 import { IsDefined, IsString } from 'class-validator';
 import { IsInEnum } from 'validation/dist';
 

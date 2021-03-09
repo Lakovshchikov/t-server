@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-import { IOrganization } from '@services/organization/orgTypes';
+import { IOrganization } from '@services/organization/types';
 import createHttpError from 'http-errors';
 import { Organization } from '../org';
 import { AbstractOrgDataV } from '../validation/abstractOrgDataV';

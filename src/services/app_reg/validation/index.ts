@@ -1,5 +1,5 @@
 import { validate, ValidationError } from 'class-validator';
-import { TAppRegReqData } from '@services/app_reg/arTypes';
+import { TAppRegReqData } from '@services/app_reg/types';
 
 export * from './editAppRegDataV';
 export * from './abstractAppRegDataV';

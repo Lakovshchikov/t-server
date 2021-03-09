@@ -1,4 +1,4 @@
-import { IEvent, TEventData } from '@services/event/eventTypes';
+import { IEvent, TEventData } from '@services/event/types';
 import { getRepository } from 'typeorm';
 import { Event } from '@services/event/event';
 import createHttpError from 'http-errors';

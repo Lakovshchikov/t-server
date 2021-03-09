@@ -1,5 +1,5 @@
-import arController from '@services/app_reg/arController';
-import { TAppRegReqData, IAppOrg } from '@services/app_reg/arTypes';
+import arController from '@services/app_reg/controller';
+import { TAppRegReqData, IAppOrg } from '@services/app_reg/types';
 import { Organization } from '@services/organization/org';
 
 class OrgFacade {

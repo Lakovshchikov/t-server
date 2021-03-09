@@ -1,2 +1,2 @@
 export * from './member';
-export { default as routes } from './memberRoutes';
+export { default as routes } from './routes';

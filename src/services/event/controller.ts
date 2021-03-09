@@ -1,13 +1,13 @@
-import { IEvent, TEventData } from '@services/event/eventTypes';
+import { IEvent, TEventData } from '@services/event/types';
 import { DbProvider } from '@services/event/providers/dbProvider';
 import { plainToClass } from 'class-transformer';
 import { ValidationError } from 'class-validator';
-import OrgFacade from '@services/organization/facade/orgFacade';
+import { api as OrgFacade } from '@services/organization';
 import createHttpError from 'http-errors';
 import { getValidationErrors } from 'validation/dist';
 import validate, { NewEventDataV, UpdateEventDataV } from './validation';
 
-class EventController {
+class Controller {
     createEvent = async (data: TEventData): Promise<IEvent> => {
         const eventData = plainToClass(NewEventDataV, data);
         const errors:ValidationError[] = await validate(eventData);
@@ -42,5 +42,5 @@ class EventController {
     checkUser = (data: any): boolean => OrgFacade.checkType(data);
 }
 
-const eventController = new EventController();
+const eventController = new Controller();
 export default eventController;

@@ -1,4 +1,4 @@
-import { TEventData, ETypesEvent } from '@services/event/eventTypes';
+import { TEventData, ETypesEvent } from '@services/event/types';
 import {
     IsNumber, IsString, Min, Max, IsUUID, MaxLength, MinLength, IsOptional, IsBoolean
 } from 'class-validator';

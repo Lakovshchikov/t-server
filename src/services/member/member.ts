@@ -1,7 +1,7 @@
 import {
     Entity, Column, JoinColumn, PrimaryColumn, ManyToOne, PrimaryGeneratedColumn
 } from 'typeorm';
-import { IMember, TMemberData, EMemberTypes } from '@services/member/memberTypes';
+import { IMember, TMemberData, EMemberTypes } from '@services/member/types';
 import { EventDate } from '@services/date/date';
 import { classToPlain, Exclude } from 'class-transformer';
 import { setDefaultValue } from 'setters/dist';

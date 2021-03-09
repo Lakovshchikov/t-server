@@ -1,6 +1,6 @@
 import { IsDefined, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TConfirmCommentReqData } from '../commentTypes';
+import { TConfirmCommentReqData } from '../types';
 import { ConfirmCommentDataV } from './confirmCommentDataV';
 
 export class ConfirmDataV implements TConfirmCommentReqData {

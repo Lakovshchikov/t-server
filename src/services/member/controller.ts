@@ -1,13 +1,13 @@
-import { IMember, TMemberData } from '@services/member/memberTypes';
-import OrgFacade from '@services/organization/facade/orgFacade';
+import { IMember, TMemberData } from '@services/member/types';
+import { api as OrgFacade } from '@services/organization';
 import createHttpError from 'http-errors';
 import { plainToClass } from 'class-transformer';
 import validate, { NewMembersDataV, EditMembersDataV } from '@services/member/validation';
 import { getValidationErrors } from 'validation/dist';
 import { DbProvider } from '@services/member/providers/dbProvider';
-import DateFacade from '@services/date/facade';
+import { api as DateFacade } from '@services/date';
 
-class MemberController {
+class Controller {
     createMembers = async (data: TMemberData[]): Promise<IMember[]> => {
         const membersData = plainToClass(NewMembersDataV, { members: data });
         const errors = await validate(membersData);
@@ -46,5 +46,5 @@ class MemberController {
     };
 }
 
-const memberController = new MemberController();
+const memberController = new Controller();
 export default memberController;

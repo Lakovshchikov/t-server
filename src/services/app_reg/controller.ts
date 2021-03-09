@@ -2,16 +2,16 @@ import { DbProvider } from '@services/app_reg/providers/dbProvider';
 import { plainToClass } from 'class-transformer';
 import { NewAppRegDataV } from '@services/app_reg/validation/newAppRegDataV';
 import { ValidationError } from 'class-validator';
-import UserFacade from '@services/user/facade/userFacade';
-import OrgFacade from '@services/organization/facade/orgFacade';
+import { api as UserFacade } from '@services/user';
+import { api as OrgFacade } from '@services/organization';
 import { EditAppRegDataV } from '@services/app_reg/validation/editAppRegDataV';
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
 import validate from '@services/app_reg/validation';
-import { IAppOrg } from '@services/app_reg/arTypes';
+import { IAppOrg } from '@services/app_reg/types';
 import createHttpError from 'http-errors';
 import { getValidationErrors } from 'validation/dist';
 
-class ArController {
+class Controller {
     createAppReg = async (data: AbstractAppRegDataV): Promise<IAppOrg> => {
         const arData = plainToClass(NewAppRegDataV, data);
         const errors:ValidationError[] = await validate(arData);
@@ -44,5 +44,5 @@ class ArController {
     checkOrg = (data:any): boolean => OrgFacade.checkType(data);
 }
 
-const arController = new ArController();
+const arController = new Controller();
 export default arController;

@@ -2,7 +2,7 @@ import { AbstractMemberV } from '@services/member/validation/abstractMemberV';
 import {
     IsDefined
 } from 'class-validator';
-import { EMemberTypes } from '@services/member/memberTypes';
+import { EMemberTypes } from '@services/member/types';
 
 export class NewMemberDataV extends AbstractMemberV {
     @IsDefined()

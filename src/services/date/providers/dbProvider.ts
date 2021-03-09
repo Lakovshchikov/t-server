@@ -1,4 +1,4 @@
-import { IEventDate, TDateData } from '@services/date/dateTypes';
+import { IEventDate, TDateData } from '@services/date/types';
 import { getRepository } from 'typeorm';
 import { EventDate } from '@services/date/date';
 import createHttpError from 'http-errors';

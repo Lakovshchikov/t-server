@@ -1,5 +1,5 @@
 import { IsDefined } from 'class-validator';
-import { EOrgForm, EReason, ETaxSystem } from '../orgTypes';
+import { EOrgForm, EReason, ETaxSystem } from '../types';
 import { AbstractOrgDataV } from './abstractOrgDataV';
 
 export class NewOrgDataV extends AbstractOrgDataV {

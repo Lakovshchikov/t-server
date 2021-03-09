@@ -1,5 +1,5 @@
 import { Comment } from '@services/comment/comment';
-import { TNNComment, IComment } from '@services/comment/commentTypes';
+import { TNNComment, IComment } from '@services/comment/types';
 import { getRepository } from 'typeorm';
 import createHttpError from 'http-errors';
 

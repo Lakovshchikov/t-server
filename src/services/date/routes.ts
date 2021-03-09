@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import eventController from '@services/event/eventController';
-import dateController from '@services/date/dateController';
-import { TDateData } from '@services/date/dateTypes';
+import eventController from '@services/event/controller';
+import dateController from '@services/date/controller';
+import { TDateData } from '@services/date/types';
 import asyncHandler from 'express-async-handler';
 import createHttpError from 'http-errors';
 

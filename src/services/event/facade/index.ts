@@ -1,5 +1,5 @@
-import eventController from '@services/event/eventController';
-import { IEvent } from '@services/event/eventTypes';
+import eventController from '@services/event/controller';
+import { IEvent } from '@services/event/types';
 
 class EventFacade {
     static getEventById = async (id: string): Promise<IEvent> => {

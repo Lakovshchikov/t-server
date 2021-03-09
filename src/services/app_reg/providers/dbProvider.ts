@@ -1,6 +1,6 @@
 import { AppReg } from '@services/app_reg/app_reg';
 import { getRepository } from 'typeorm';
-import { IAppOrg } from '@services/app_reg/arTypes';
+import { IAppOrg } from '@services/app_reg/types';
 
 import { AbstractAppRegDataV } from '@services/app_reg/validation/abstractAppRegDataV';
 import createHttpError from 'http-errors';

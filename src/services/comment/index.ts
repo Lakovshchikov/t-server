@@ -1,2 +1,2 @@
 export * from './comment';
-export { default as routes } from './commentRoute';
+export { default as routes } from './routes';

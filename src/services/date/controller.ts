@@ -1,14 +1,14 @@
 import { plainToClass } from 'class-transformer';
 import { DbProvider } from '@services/date/providers/dbProvider';
 import { ValidationError } from 'class-validator';
-import OrgFacade from '@services/organization/facade/orgFacade';
+import { api as OrgFacade } from '@services/organization';
 import createHttpError from 'http-errors';
-import { TDateData, IEventDate } from '@services/date/dateTypes';
+import { TDateData, IEventDate } from '@services/date/types';
 import validate, { NewDateV, EditDateV } from '@services/date/validation/';
-import EventFacade from '@services/event/facade';
+import { api as EventFacade } from '@services/event';
 import { getValidationErrors } from 'validation/dist';
 
-class DateController {
+class Controller {
     createDate = async (data: TDateData): Promise<IEventDate> => {
         try {
             const dateData = plainToClass(NewDateV, data);
@@ -65,5 +65,5 @@ class DateController {
     checkUser = (data: any): boolean => OrgFacade.checkType(data);
 }
 
-const dateController = new DateController();
+const dateController = new Controller();
 export default dateController;

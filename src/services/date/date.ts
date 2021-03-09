@@ -6,7 +6,7 @@ import { Location } from '@services/location/location';
 import { Member } from '@services/member/member';
 import { TicketCat } from '@services/ticket_cat/ticketCat';
 import { classToPlain, Exclude } from 'class-transformer';
-import { IEventDate, TDateData } from '@services/date/dateTypes';
+import { IEventDate, TDateData } from '@services/date/types';
 import { v4 as uuidv4 } from 'uuid';
 import { setDefaultValue } from 'setters/dist';
 

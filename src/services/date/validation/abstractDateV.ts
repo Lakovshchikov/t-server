@@ -1,4 +1,4 @@
-import { TDateData } from '@services/date/dateTypes';
+import { TDateData } from '@services/date/types';
 import { IsDateString, IsOptional, IsUUID } from 'class-validator';
 
 export abstract class AbstractDateV implements TDateData {

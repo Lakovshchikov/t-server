@@ -1,6 +1,6 @@
 import { AbstractOrgDataV } from '@services/organization/validation/abstractOrgDataV';
 import { IsOptional, ValidateIf, isEmpty, IsEmpty } from 'class-validator';
-import { EOrgForm, EReason, ETaxSystem } from '@services/organization/orgTypes';
+import { EOrgForm, EReason, ETaxSystem } from '@services/organization/types';
 
 export class EditOrgDataV extends AbstractOrgDataV {
     @IsOptional()

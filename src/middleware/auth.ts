@@ -4,7 +4,7 @@ import { Strategy } from 'passport-local';
 import { User } from '@services/user/user';
 import { Organization } from '@services/organization/org';
 import usersController from '@services/user/usersController';
-import orgController from '@services/organization/orgController';
+import orgController from '@services/organization/controller';
 
 export const handleAuth = (router: Router) => {
     router.use(passport.initialize());

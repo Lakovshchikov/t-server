@@ -1,4 +1,4 @@
-import { TConfirmComment } from '@services/comment/commentTypes';
+import { TConfirmComment } from '@services/comment/types';
 import { IsDefined, IsUUID, IsBoolean } from 'class-validator';
 
 export class ConfirmCommentDataV implements TConfirmComment {

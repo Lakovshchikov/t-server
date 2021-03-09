@@ -1,4 +1,4 @@
-import { TNNComment, TReqComment } from '@services/comment/commentTypes';
+import { TNNComment, TReqComment } from '@services/comment/types';
 import NnModuleApi from '@services/comment/providers/nnModuleApi';
 
 export default abstract class NNProvider {

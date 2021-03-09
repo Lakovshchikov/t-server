@@ -1,7 +1,7 @@
 // https://github.com/Kholenkov/js-data-validation/blob/master/data-validation.js
 
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { EOrgForm } from '@services/organization/orgTypes';
+import { EOrgForm } from '@services/organization/types';
 import { AbstractOrgDataV } from './abstractOrgDataV';
 
 const checkDigit = function (inn: string, coefficients: number[]): number {

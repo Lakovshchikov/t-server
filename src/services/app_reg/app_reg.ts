@@ -4,7 +4,7 @@ import {
 import { Organization } from '@services/organization/org';
 import { setDefaultValue } from 'setters/dist';
 import { Exclude, classToPlain } from 'class-transformer';
-import { IAppOrg, EStatus, TAppRegReqData } from './arTypes';
+import { IAppOrg, EStatus, TAppRegReqData } from './types';
 
 @Entity({ name: 'app_reg' })
 export class AppReg implements IAppOrg {

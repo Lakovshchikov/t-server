@@ -3,13 +3,13 @@ import { ValidationError } from 'class-validator';
 import createHttpError from 'http-errors';
 import { getValidationErrors } from 'validation/dist';
 import { DbProvider } from './providers/dbProvider';
-import { TOrgReqData, IOrganization } from './orgTypes';
+import { TOrgReqData, IOrganization } from './types';
 import { NewOrgDataV } from './validation/newOrgDataV';
 import { EditOrgDataV } from './validation/editOrgDataV';
-import OrgFacade from './facade/orgFacade';
+import { api as OrgFacade } from './index';
 import validate from './validation';
 
-class OrgController {
+class Controller {
     getUserByEmail = async (email: string): Promise<IOrganization> => {
         try {
             const user = await DbProvider.getOrgByEmail(email);
@@ -53,5 +53,5 @@ class OrgController {
     };
 }
 
-const orgController = new OrgController();
+const orgController = new Controller();
 export default orgController;

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import arController from '@services/app_reg/arController';
+import arController from '@services/app_reg/controller';
 import asyncHandler from 'express-async-handler';
 import createHttpError from 'http-errors';
-import { IAppOrg } from '@services/app_reg/arTypes';
+import { IAppOrg } from '@services/app_reg/types';
 
 export default [
     // Получение заявки на регистрацию

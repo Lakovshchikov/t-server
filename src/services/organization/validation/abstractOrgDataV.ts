@@ -4,7 +4,7 @@ import {
 import { Transform } from 'class-transformer';
 import {
     EOrgForm, EReason, ETaxSystem, TOrgReqData, ECountry
-} from '@services/organization/orgTypes';
+} from '@services/organization/types';
 import { IsInEnum } from 'validation/dist';
 import {
     IsOGRN, IsCheckingAccount, IsCorrespondentAccount, IsINN

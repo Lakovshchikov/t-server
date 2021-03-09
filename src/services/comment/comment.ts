@@ -2,7 +2,7 @@ import {
     Entity, Column, JoinColumn, PrimaryGeneratedColumn, ManyToOne
 } from 'typeorm';
 import { Event } from '@services/event/event';
-import { IComment, TInfo, TCommentDate } from '@services/comment/commentTypes';
+import { IComment, TInfo, TCommentDate } from '@services/comment/types';
 import { setDefaultValue } from 'setters/dist';
 import { Exclude, classToPlain } from 'class-transformer';
 
