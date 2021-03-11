@@ -38,6 +38,11 @@ class Controller {
         return result;
     };
 
+    getTicketCatByID = async (id: string): Promise<ITicketCat> => {
+        const ticketCat = await DbProvider.getTicketCategoriesByIds([ id ]);
+        return ticketCat[0];
+    };
+
     checkUser = (data: any): boolean => OrgFacade.checkType(data);
 
     checkPermission = async (date_id: string, user_id: string) :Promise<boolean> => {

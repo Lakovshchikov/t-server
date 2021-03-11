@@ -22,11 +22,11 @@ export const clientError = (err: HttpError, res: Response, next: NextFunction) =
     }
 };
 
-export const serverError = (err: Error, res: Response, next: NextFunction) => {
+export const serverError = (err: HttpError, res: Response, next: NextFunction) => {
     console.error(err);
     if (process.env.NODE_ENV === 'production') {
         res.status(500).send('Internal Server Error');
     } else {
-        res.status(500).send(err.stack);
+        res.status(500).send({ message: err.message, error: err.stack });
     }
 };

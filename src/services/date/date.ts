@@ -52,7 +52,7 @@ export class EventDate implements IEventDate {
     members: Member[];
 
     @OneToMany(() => TicketCat, ticket_cat => ticket_cat.date)
-    @JoinColumn({ name: 'id' })
+    @JoinColumn({ name: 'id', referencedColumnName: 'id_cat' })
     @Exclude()
     ticket_categories: TicketCat[];
 

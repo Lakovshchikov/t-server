@@ -71,6 +71,8 @@ export abstract class DbProvider {
             const ticketCats = await ticketCatRepository
                 .createQueryBuilder('ticket_cat')
                 .where('ticket_cat.id IN (:...ids)', { ids })
+                .leftJoinAndSelect('ticket_cat.date', 'date')
+                .leftJoinAndSelect('date.event', 'event')
                 .getMany();
 
             return ticketCats;
