@@ -24,7 +24,7 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
         const data: TTicketCatData[] = req.body;
         idDate = data[0].id_d;
     }
-    // @ts-ignore
+
     const hasPermission = await ticketCatController.checkPermission(idDate, user.id);
     if (hasPermission) {
         next();

@@ -24,7 +24,7 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
         const data: TPromoCodeData[] = req.body;
         iD = data[0].id_cat;
     }
-    // @ts-ignore
+
     const hasPermission = await pcController.checkPermission(iD, user.id);
     if (hasPermission) {
         next();

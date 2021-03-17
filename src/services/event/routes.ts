@@ -16,7 +16,7 @@ const checkUserType = (req: Request, res: Response, next: NextFunction) => {
 const checkOrgId = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
     const data: TEventData = req.body;
-    // @ts-ignore
+
     if (data.id_org !== user.id) {
         next(createHttpError(403, 'The user does not have permission to do this.'));
     } else {

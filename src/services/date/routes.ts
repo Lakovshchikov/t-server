@@ -17,7 +17,7 @@ const checkUserType = (req: Request, res: Response, next: NextFunction) => {
 const checkPermission = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
     const data: TDateData = req.body;
-    // @ts-ignore
+
     const hasPermission = await dateController.checkPermission(data.id_ev, user.id);
     if (hasPermission) {
         next();
