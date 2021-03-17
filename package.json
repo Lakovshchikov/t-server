@@ -52,6 +52,7 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "setters": "file:local_packages/setters",
+    "routes_utils": "file:local_packages/routes_utils",
     "tsc-watch": "^4.2.9",
     "typeorm": "0.2.28",
     "uuid": "^8.3.2",

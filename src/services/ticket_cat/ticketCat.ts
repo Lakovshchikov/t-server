@@ -1,9 +1,9 @@
 import {
     Entity, Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn, OneToMany
 } from 'typeorm';
-import { EventDate } from '@services/date/date';
-import { PricePolicy } from '@services/price_policy/price_policy';
-import { Promocode } from '@services/promocode/promocode';
+import { EventDate } from '@services/date/';
+import { PricePolicy } from '@services/price_policy/';
+import { PromoCode } from '@services/promocode/';
 import { ITicketCat, TTicketCatData, ETicketCatTypes } from '@services/ticket_cat/types';
 import { Exclude, classToPlain } from 'class-transformer';
 import { setDefaultValue } from 'setters/dist';
@@ -45,10 +45,10 @@ export class TicketCat implements ITicketCat {
     @Exclude()
     price_policy: PricePolicy[];
 
-    @ManyToOne(() => Promocode, promocode => promocode.ticket_cat)
+    @ManyToOne(() => PromoCode, promocode => promocode.ticket_cat)
     @JoinColumn({ name: 'id', referencedColumnName: 'id_cat' })
     @Exclude()
-    promocodes: Promocode[];
+    promocodes: PromoCode[];
 
     @Exclude()
     serialize = (): Record<string, any> => classToPlain(this);
