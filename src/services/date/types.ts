@@ -9,8 +9,6 @@ export interface IEventDate extends TDateData {
 
     serialize: () => Record<string, any>
 
-    getDate: () => Date,
-
     setProperties: (data: TDateData) => void
 }
 

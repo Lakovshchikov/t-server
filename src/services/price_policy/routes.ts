@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { TPricePolicyData } from '@services/price_policy/types';
 import createHttpError from 'http-errors';
 import asyncHandler from 'express-async-handler';
-import { ITicketCat } from '@services/ticket_cat/types';
+import { getSerializedArray } from 'routes_utils/dist';
 import ppController from './controller';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
@@ -32,14 +32,6 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
         throw createHttpError(403, 'The user does not have permission to do this.');
     }
 });
-
-const getSerializedArray = (array: {serialize: () => Record<string, any>}[]): Record<string, any>[] => {
-    const result: (Record<string, any>)[] = [];
-    array.forEach((c: ITicketCat) => {
-        result.push(c.serialize());
-    });
-    return result;
-};
 
 export default [
     {

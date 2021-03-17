@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 import { NextFunction, Request, Response } from 'express';
 import { TMemberData } from '@services/member/types';
 import asyncHandler from 'express-async-handler';
+import { getSerializedArray } from 'routes_utils/dist';
 import memberController from './controller';
 
 const checkUserType = (req: Request, res: Response, next: NextFunction) => {
@@ -25,17 +26,9 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
     }
 });
 
-const getSerializedArray = (array: {serialize: () => Record<string, any>}[]): Record<string, any>[] => {
-    const result: (Record<string, any>)[] = [];
-    array.forEach((i) => {
-        result.push(i.serialize());
-    });
-    return result;
-};
-
 export default [
     {
-        path: '/events/member',
+        path: '/event/member',
         method: 'post',
         handler: [
             checkUserType,
@@ -48,8 +41,9 @@ export default [
             })
         ]
     },
+    // TO DO по get параметру чекать доступ, по параметру из тела - менять дату, как для промокодов
     {
-        path: '/events/member',
+        path: '/event/member',
         method: 'put',
         handler: [
             checkUserType,
@@ -64,7 +58,7 @@ export default [
     },
     // param date_id
     {
-        path: '/events/member',
+        path: '/event/member',
         method: 'get',
         handler: [
             asyncHandler(async (req:Request, res:Response) => {

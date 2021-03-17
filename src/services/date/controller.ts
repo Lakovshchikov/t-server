@@ -52,10 +52,9 @@ class Controller {
         }
     };
 
-    checkPermission = async (date_id: string, user_id: string): Promise<boolean> => {
+    checkPermission = async (id_ev: string, user_id: string): Promise<boolean> => {
         let hasPermission = false;
-        const date = await this.getDateById(date_id);
-        const event = await EventFacade.getEventById(date.id_ev);
+        const event = await EventFacade.getEventById(id_ev);
         if (event.id_org === user_id) {
             hasPermission = true;
         }

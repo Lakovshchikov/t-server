@@ -27,7 +27,7 @@ const checkOrgId = (req: Request, res: Response, next: NextFunction) => {
 export default [
     // Создание мероприятия
     {
-        path: '/events/',
+        path: '/event/',
         method: 'post',
         handler: [
             checkUserType,
@@ -45,7 +45,7 @@ export default [
     },
     // Изменение мероприятий
     {
-        path: '/events/',
+        path: '/event/',
         method: 'put',
         handler: [
             checkUserType,

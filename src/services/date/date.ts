@@ -60,14 +60,11 @@ export class EventDate implements IEventDate {
     serialize = (): Record<string, any> => classToPlain(this);
 
     @Exclude()
-    getDate = (): Date => new Date();
-
-    @Exclude()
     setProperties = (data: TDateData):void => {
         if (!this.id) this.id = uuidv4();
         if (!this.id_ev) this.id_ev = data.id_ev;
         if (!this.id_loc) this.id_loc = data.id_loc;
         if (!this.id_sh) this.id_loc = data.id_sh;
-        this.date = setDefaultValue(data.date, this.date, null);
+        this.date = setDefaultValue(data.date, this.date);
     };
 }

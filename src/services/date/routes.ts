@@ -18,7 +18,7 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
     const { user } = req;
     const data: TDateData = req.body;
     // @ts-ignore
-    const hasPermission = await dateController.checkPermission(data.id, user.id);
+    const hasPermission = await dateController.checkPermission(data.id_ev, user.id);
     if (hasPermission) {
         next();
     } else throw createHttpError(403, 'The user does not have permission to do this.');
@@ -27,7 +27,7 @@ const checkPermission = asyncHandler(async (req: Request, res: Response, next: N
 export default [
     // Создание даты проведения мероприятия
     {
-        path: '/events/date/',
+        path: '/event/date/',
         method: 'post',
         handler: [
             checkUserType,
@@ -41,7 +41,7 @@ export default [
     },
     // Изменение даты проведения мероприятия
     {
-        path: '/events/date/',
+        path: '/event/date/',
         method: 'put',
         handler: [
             checkUserType,
