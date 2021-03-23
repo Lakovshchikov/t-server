@@ -58,7 +58,7 @@ export abstract class DbProvider {
                 .createQueryBuilder('price_policy')
                 .delete()
                 .where('price_policy.id_cat = :id', { id })
-                .andWhere('price_policy.days = days', { days })
+                .andWhere('price_policy.days = :days', { days })
                 .execute();
 
             return true;

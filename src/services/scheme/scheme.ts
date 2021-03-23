@@ -8,6 +8,9 @@ export class Scheme {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ type: 'text' })
+    name: string;
+
     @Column({ type: 'jsonb' })
     config: {};
 

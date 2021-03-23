@@ -1,7 +1,7 @@
 import { Event, routes as eventRoutes } from '@services/event/';
 import { AppEdit } from '@services/app_edit/';
 import { Comment, routes as commentRoutes } from '@services/comment/';
-import { Location } from '@services/location/location';
+import { Location, routes as locationRoutes } from '@services/location/';
 import { Scheme } from '@services/scheme/scheme';
 import { Member, routes as memberRoutes } from '@services/member';
 import { TicketCat, routes as ticketCatRoutes } from '@services/ticket_cat';
@@ -16,7 +16,7 @@ import { EventDate, routes as dateRoutes } from './date';
 
 export default [ ...usersRoutes, ...orgRoutes, ...appRegRoutes,
     ...commentRoutes, ...eventRoutes, ...dateRoutes, ...memberRoutes,
-    ...ticketCatRoutes, ...pricePolicyRoutes, ...promocodeRoutes ];
+    ...ticketCatRoutes, ...pricePolicyRoutes, ...promocodeRoutes, ...locationRoutes ];
 
 export const entities = [ User, Ticket, Organization, Event,
     AppEdit, Comment, Component, EventDate, Location, Scheme, Member,
